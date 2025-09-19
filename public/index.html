@@ -323,30 +323,35 @@
   toLogin?.addEventListener("click",  e => { e.preventDefault(); show("login"); });
 
   // --- Login
-  loginForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("loginEmail").value.trim();
-    const pass  = document.getElementById("loginPass").value;
-    try {
-      const cred = await signInWithEmailAndPassword(auth, email, pass);
-      const idToken = await cred.user.getIdToken(true);
-     
+  // inside <script type="module"> (your auth code)
+loginForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("loginEmail").value.trim();
+  const pass  = document.getElementById("loginPass").value;
 
-      const r = await fetch("/sessionLogin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      
-        credentials: "include"  
-      });
+  try {
+    const cred    = await signInWithEmailAndPassword(auth, email, pass);
+    const idToken = await cred.user.getIdToken(true);
 
-      statusEl.textContent = r.ok ? "Sesión iniciada" : "No se pudo crear sesión en el servidor";
-      if (r.ok) navigateTo?.("epiderm-1");
-     try { grecaptcha.reset(); } catch {}
-    } catch (err) {
-      statusEl.textContent = niceAuthError(err);
-      console.error(err);
+    const r = await fetch("/api/sessionLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ idToken })
+    });
+
+    if (r.ok) {
+      statusEl.textContent = "Sesión iniciada";
+      navigateTo?.("epiderm-1");
+    } else {
+      statusEl.textContent = "No se pudo crear sesión en el servidor";
     }
-  });
+  } catch (err) {
+    statusEl.textContent = niceAuthError(err);
+    console.error(err);
+  }
+});
+
 
   
   signupForm?.addEventListener("submit", async (e) => {
