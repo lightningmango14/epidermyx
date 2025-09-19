@@ -89,11 +89,11 @@ async function verifyRecaptcha(req, res, next) {
 
     const data = await r.json();
 
-    // (optional) pin allowed hostnames
+
     const allowed = new Set([
       'localhost','127.0.0.1',
       'epidermyx.com','www.epidermyx.com',
-      // add your <project>.vercel.app later
+
     ]);
 
     if (!data.success || (data.hostname && !allowed.has(data.hostname))) {
@@ -114,7 +114,7 @@ const SESSION_LOGOUT_PATHS = ["/sessionLogout", "/api/sessionLogout"];
 const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
 
-// --- LOGIN (no captcha), supports /sessionLogin and /api/sessionLogin
+
 
 app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
   try {
@@ -123,10 +123,10 @@ app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
       return res.status(400).json({ ok: false, error: "Missing idToken" });
     }
 
-    // Optional sanity check (keeps bad tokens out)
+
     await admin.auth().verifyIdToken(idToken);
 
-    const expiresIn = 5 * 24 * 60 * 60 * 1000; // 5 days
+    const expiresIn = 5 * 24 * 60 * 60 * 1000; 
     const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
 
     res.cookie("__session", cookie, {
@@ -164,7 +164,7 @@ app.post(SESSION_SIGNUP_PATHS, express.json(), verifyRecaptcha, async (req, res)
   }
 });
 
-// keep logout & whoami as you had, but with aliases:
+
 app.post(SESSION_LOGOUT_PATHS, (_req,res)=>{ res.clearCookie("__session"); res.json({ok:true}); });
 app.get(WHOAMI_PATHS, authRequired, (req,res)=> res.json({ ok:true, uid:req.user.uid, email:req.user.email || null }));
 
@@ -335,10 +335,10 @@ app.use(cors({
   credentials: true
 }));
 
-// let CORS handle preflight everywhere
+
 app.options('*', cors());
 
-// (optional: explicit for key routes, harmless duplicates)
+
 app.options(['/api/sessionLogin','/sessionLogin'], cors());
 app.options(['/api/analyze','/analyze'], cors());
 app.options(['/api/hf-classify','/hf-classify'], cors());
@@ -414,7 +414,7 @@ async function hfImageClassify(model, imageBuffer, { maxRetries = 2, retryDelayM
 // --- Routes ---
 
 // EpiDerm-1 
-const ANALYZE_PATHS = ["/analyze", "/api/analyze"]; // support old and new
+const ANALYZE_PATHS = ["/analyze", "/api/analyze"]; 
 app.post(ANALYZE_PATHS, authRequired, usageLimiter({ daily: 3, monthly: 90 }), upload.single("imagen"), async (req, res) => {
     try {
       if (!req.file) {
@@ -491,7 +491,7 @@ return res.json({
 
 //hhtft
 app.get("/hf-sanity", async (_req, res) => {
-  const slug = "lightningpal/epiderm2";          // <-- your slug
+  const slug = "lightningpal/epiderm2";         
   const r = await fetch(`https://huggingface.co/api/models/${slug}`, {
     headers: (process.env.HF_TOKEN?.startsWith("hf_"))
       ? { Authorization: `Bearer ${process.env.HF_TOKEN}` } : {}
@@ -546,7 +546,7 @@ app.get(/.*/, (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 if (process.env.VERCEL) {
-  module.exports = app; // Vercel imports this in api/index.js
+  module.exports = app; 
 } else {
   app.listen(PORT, () => console.log('Server listening on ' + PORT));
 }
