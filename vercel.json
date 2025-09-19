@@ -7,7 +7,6 @@
   ],
   "functions": {
     "api/index.js": {
-      "runtime": "nodejs22.x",
       "memory": 1536,
       "maxDuration": 20
     }
