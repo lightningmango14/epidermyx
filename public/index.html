@@ -389,7 +389,7 @@ loginForm?.addEventListener("submit", async (e) => {
   logoutBtn?.addEventListener("click", async () => {
     try {
       await signOut(auth);
-      await fetch("/sessionLogout", { method: "POST", credentials: "include" });
+      await fetch("/api/sessionLogout", { method: "POST", credentials: "include" });
       statusEl.textContent = "Sesión cerrada";
       show("login");
     } catch (e) { console.error(e); }
