@@ -2,13 +2,13 @@
   "version": 2,
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
+
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+    { "src": "/(favicon\\.ico|robots\\.txt|manifest\\.json|assets/.*|.*\\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|txt))", "dest": "/public/$1" },
+
+    { "src": "/(.*)", "dest": "/public/index.html" }
   ],
   "functions": {
-    "api/index.js": {
-      "memory": 1536,
-      "maxDuration": 20
-    }
+    "api/index.js": { "memory": 1536, "maxDuration": 20 }
   }
 }
