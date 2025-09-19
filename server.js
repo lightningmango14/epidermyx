@@ -115,7 +115,6 @@ const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
 
 // --- LOGIN (no captcha), supports /sessionLogin and /api/sessionLogin
-const SESSION_LOGIN_PATHS = ["/sessionLogin", "/api/sessionLogin"];
 
 app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
   try {
