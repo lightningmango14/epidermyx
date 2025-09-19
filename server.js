@@ -114,24 +114,37 @@ const SESSION_LOGOUT_PATHS = ["/sessionLogout", "/api/sessionLogout"];
 const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
 
+// --- LOGIN (no captcha), supports /sessionLogin and /api/sessionLogin
+const SESSION_LOGIN_PATHS = ["/sessionLogin", "/api/sessionLogin"];
+
 app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
   try {
     const idToken = req.body?.idToken;
-    if (!idToken) return res.status(400).json({ ok:false, error:"Missing idToken" });
+    if (!idToken) {
+      return res.status(400).json({ ok: false, error: "Missing idToken" });
+    }
 
-    const expiresIn = 5 * 24 * 60 * 60 * 1000;
+    // Optional sanity check (keeps bad tokens out)
+    await admin.auth().verifyIdToken(idToken);
+
+    const expiresIn = 5 * 24 * 60 * 60 * 1000; // 5 days
     const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
+
     res.cookie("__session", cookie, {
-      httpOnly: true, sameSite: "lax",
+      httpOnly: true,
+      sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
-      path: "/", maxAge: expiresIn
+      path: "/",
+      maxAge: expiresIn
     });
-    return res.json({ ok:true });
+
+    return res.json({ ok: true });
   } catch (err) {
     console.error("[/sessionLogin] ERROR:", err);
-    return res.status(401).json({ ok:false, error:"Session creation failed" });
+    return res.status(401).json({ ok: false, error: "Session creation failed" });
   }
 });
+
 
 app.post(SESSION_SIGNUP_PATHS, express.json(), verifyRecaptcha, async (req, res) => {
   try {
