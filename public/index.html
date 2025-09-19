@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="noindex, nofollow">
+  <title>EpiDermyx (beta)</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<main>
+  <header class="topbar">
+  <div class="brand" onclick="navigateTo('inicio')">EpiDermyx (beta)</div>
+
+  
+  <nav class="nav-inline" aria-label="Primary">
+    <a href="#" onclick="navigateTo('epiderm-1')">EpiDerm-1</a>
+    <a href="#" onclick="navigateTo('epiderm-2')">EpiDerm-2</a>
+    <a href="#" onclick="navigateTo('iniciar-sesion')">Iniciar Sesión</a>
+  </nav>
+
+   <div class="hamburger" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <nav class="menu" id="menu">
+      <a href="#" onclick="navigateTo('inicio')">Inicio</a>
+      <a href="#" onclick="navigateTo('epiderm-1')">EpiDerm-1</a>
+      <a href="#" onclick="navigateTo('epiderm-2')">EpiDerm-2</a>
+      <a href="#" onclick="navigateTo('guiadiagnostico')">Guía de Diagnóstico</a>
+      <a href="#" onclick="navigateTo('acerca')">Acerca de</a>
+      <a href="#" onclick="navigateTo('iniciar-sesion')">Iniciar Sesión</a>
+    </nav>
+</header>
+
+    <section id="inicio" class="section active">
+      <div>
+        <div class="welcome-container only-inicio " >
+          <h1 class="welcome">Bienvenido a EpiDermyx</h1>
+          
+          <p class="welcome-p">Una página que remueve los límites a la salud de tu piel, utilizando la revolucionaria tecnología de la inteligencia artificial.</p>
+          
+          <p class="welcome-p warning">Advertencia: Esta página está en proceso de desarrollo y puede tener errores de información, diagnóstico, funcionamiento, etc. Ante cualquier <em>bug</em> u otro error, porfavor contactar a epidermyx1@gmail.com, adjuntando una foto y explicación de aquel.</p>
+          <div class="btnwrap">
+            <button type="submit" onclick="navigateTo('epiderm-1')" class="visit-welcome epbtn1" href="#">Visita EpiDerm-1</button>
+            <button type="submit" onclick="navigateTo('epiderm-2')" class="visit-welcome epbtn2" href="#">Visita EpiDerm-2</button>
+          </div>
+        </div>
+        <div class="intro only-inicio " >
+          <img src="2461875.png" alt="Imagen de la Piel" class="imagen"/> <!---FIX FADE/Classes-->
+          <p class="intro-p">La piel es el órgano <b>más grande</b> del cuerpo, y es por esto que so cuidado es crucial para un bienestar general, no solo física, si no hasta mental. Aprende más mediante nuestra <a href="#" onclick="navigateTo('guiadiagnostico')">guía de diagnóstico</a> y <a href="#" onclick="navigateTo('paginas-apoyo')">páginas de apoyo</a>.</p>
+        </div>
+      </div>
+    </section>
+    
+    <section id="iniciar-sesion" class="section content">
+  <div class="card" style="max-width:360px">
+    <h3 id="authTitle" class="logintitle">Iniciar sesión</h3>
+
+    
+    <form id="loginForm">
+      <input id="loginEmail" type="email" placeholder="Email" required>
+      <input id="loginPass" type="password" placeholder="Contraseña" required>
+      <button type="submit" class="btn">Entrar</button>
+      <p class="muted" style="margin-top:8px">
+        ¿No tienes cuenta? <a href="#" id="toSignup">Crear una</a>
+      </p>
+    </form>
+
+   
+
+    <form id="signupForm" class="hidden">
+      <input id="signupEmail" type="email" placeholder="Email" required>
+      <input id="signupPass" type="password" placeholder="Contraseña" required>
+      <input id="signupPass2" type="password" placeholder="Repite la contraseña" required>
+      <button type="submit" class="btn">Crear cuenta</button>
+      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+      <div class="captcha-wrap" style="margin:12px 0">
+        <div class="g-recaptcha" data-sitekey="6Lda8c0rAAAAAFsCSIRtzT2KNuRdoICQXCIvuDPM"></div>
+      </div>
+      <p class="muted" style="margin-top:8px">
+        ¿Ya tienes cuenta? <a href="#" id="toLogin">Inicia sesión</a>
+      </p>
+    </form>
+
+    <div id="loginStatus" class="muted" style="margin-top:8px"></div>
+    <button type="button" id="logoutBtn" class="btn alt hidden" style="margin-top:8px">Salir</button>
+  </div>
+</section>
+
+    <section id="epiderm-1" class="section content">
+  <h1 class="ep2int">EpiDerm-1</h1>
+  <h4 class="ep2h4">Consulta con IA</h4>
+
+  <form id="ia-form" class="requires-login">
+    <div class="dz" data-preview="#ia-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
+      <p>Arrastra una imagen aquí o haz clic en el espacio para elegir</p>
+      <input id="ia-file" name="imagen" type="file" accept="image/*" hidden>
+    </div>
+    <textarea name="pregunta" placeholder="¿Qué deseas saber?"></textarea>
+    <label class="checkboxlabel">
+      <input type="checkbox" id="consent" required>
+      Entiendo que esto es informativo y no reemplaza atención médica.
+    </label>
+    <button type="submit" class="visit-welcome">Enviar a la IA</button>
+  </form>
+
+  <div id="ia-preview-wrap" class="center">
+    <img id="ia-preview" class="preview hidden" alt="Vista previa">
+  </div>
+
+  <h2 class="ans">Respuesta:</h2>
+  <div id="respuesta" class="anstxt"></div>
+  <div id="loader" class="anstxt hidden">⏳ Cargando...</div>
+</section>
+
+    <section id="guiadiagnostico" class="section cards">
+      <div class="acnediv">
+        <div class="acnediv3">
+          <a href="#" onclick="navigateTo('acne')" class="linkunderline">
+            <img src="acnesite1.jpg" alt="Acne Image" class="acneimg">
+            <div class="acnediv2">
+              <p class="acnetxt">Acné</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="acnediv">
+        <div class="acnediv3">
+          <a href="#" onclick="navigateTo('melanoma')" class="linkunderline">
+            <img src="melanoma_8577.jpg" alt="Melanoma Image" class="acneimg">
+            <div class="acnediv2">
+              <p class="acnetxt">Melanoma</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="acnediv">
+        <div class="acnediv3">
+          <a href="#" onclick="navigateTo('alopeciaareata')" class="linkunderline">
+            <img src="seboderm1.jpg" alt="Alopecia Areata Image" class="acneimg">
+            <div class="acnediv2">
+              <p class="acnetxt">Alopecia Areata</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="acnediv">
+        <div class="acnediv3">
+          <a href="#" onclick="navigateTo('Seborrheic Dermatitis')" class="linkunderline">
+            <img src="seboderm1.jpg" alt="Image of Seborrheic Dermatitis" class="acneimg">
+            <div class="acnediv2">
+              <p class="acnetxt">Seborrheic Dermatitis</p>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="acnediv">
+        <div class="acnediv3">
+          <a href="#" onclick="navigateTo('Seborrheic Dermatitis')" class="linkunderline">
+            <img src="seboderm1.jpg" alt="Image of Seborrheic Dermatitis" class="acneimg">
+            <div class="acnediv2">
+              <p class="acnetxt">Seborrheic Dermatitis</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="acne" class="section content">
+      <div class="acnesection">
+        <h1 class="sectiontitle">Acné</h1>
+        <h4 class="padding1">Una de las enfermedades más comunes, especialmente en etapas de desarrollo hormonal, es el acné.</h4> <!--fix all tooltips-->
+        <img src="acnesite2.jpeg" alt="Image of a person diagnosed with Acne" class="acneimg2">
+        <p>Según Pérez-Cotapos (2003), “Corresponde a una enfermedad crónica del aparato pilo sebáceo en la que se forman comedones abiertos y cerrados (puntos negros y blancos), pápulas, pústulas, nódulos y quistes en los casos más severos”. Surita, A.H y otros autores indican que es resultado de la hipersensbilidad de las glándulas pilosebáceas hacia niveles normales de andrógeno circulante.</p>
+        <p>Factores más comunes implicados en su formación incluyen:</p> <!--on the previous line, make sure to remember tooltipping "pilosebaceous glands" and maybe the definition of hypersensitivity-->
+        <div class="acneul">
+          <ul class="acneul">
+            <li>Trastornos de la <div class="tooltip">queratinización del conducto pilosebáceo<span class="tooltiptext">Acumulación de queratina y células muertas en el canal del pelo y glándula sebácea que obstruye el poro.</span></div></li>
+            <li>Aumento en la producción del sebo</li>
+            <li>Proliferación (crecimiento) de población de bacterias como Propionibacterium acnes</li>
+            <li>Procesos Inflamatorios</li>
+            <li>Estrés Psicológico</li> 
+          </ul>
+        
+        <p>Además, hay factores que exacerban esta condición, como:</p>
+          <ul>
+            <li>Presencia de <a href="#" onclick="navigateTo('cutibacterium-acnes')"><em>Cutibacterium acnes</em></a> e inflamación posterior.</li>
+          </ul>
+
+        </div>
+        <p>M.T. Molina (2005) indica que hoy en día se consideran (independiente de grado de severidad y extensión):</p>
+        <div class="acneul">
+          <ul class="acneul">
+            <li>Acné no inflamatorio:
+            <p>Predominan los 
+              <div class="tooltip">comedones 
+                <span class="tooltiptext">Inflamaciones de la piel que se forman en los poros tapados</span>
+              </div> abiertos y cerrados, macro comedones y pápulas escasas.
+            </p>
+            </li>
+            <li>Acné Inflamatorio:
+            <p>Predominan lesiones inflamatorias, pústulas, 
+            pápulas, nódulos y subtipos</p></li>
+            <li>Secuelas:
+            <p>Lesiones cicatriciales en 
+              <div class="tooltip">áreas seborreicas
+                <span class="tooltiptext">Regiones del cuerpo en donde más se produce sebo (sustancia grasa natural)</span>
+              </div>, cara, pecho y espalda.
+              Entre los tipos más severos se encuentran el acné Conglobata y el acné Fulminans, que tienen síntomas característicos.
+            </p>
+          </li>
+        </ul>
+        </div>
+        <p>Al igual que muchas otras patologías de la piel, el tratamiento del acné varía mucho dependiendo del paciente, entonces la revisión dermatológica es vital. Pese a esto, hay algunos tratamientos generales que se pueden aplicar, como:</p>
+        <p>Tratamientos combinados:
+      Hay ciertos medicamentos que funcionan mejor con otros, como el peróxido benzoilo más antibióticos tópicos
+      Además, existen tratamientos sistemáticos como dieta, antibióticos orales e isotretinoína oral.</p>
+          <button type="submit" onclick="checker('https://www.clinicalascondes.cl/Dev_CLC/media/Imagenes/PDF%20revista%20m%C3%A9dica/2011/6%20nov/9_Dermatosis_del_adolescente-12.pdf')" class="visit-welcome" >Visitar Artículo Fuente</button>
+      </div>
+    </section>
+
+    <section id="melanoma" class="section content">
+      <h1 class="sectiontitle">Melanoma</h1>
+
+      
+      <button type="submit" onclick="checker('https://www.mayoclinic.org/diseases-conditions/melanoma/symptoms-causes/syc-20374884')" class="visit-welcome" >Visitar Artículo Mayo Clinic</button>
+      <button type="submit" onclick="checker('https://www.cancer.gov/espanol/tipos/piel/paciente/tratamiento-melanoma-pdq')" class="visit-welcome" >Visitar Artículo NIH</button>
+    </section>
+
+
+<section id="epiderm-2" class="section content">
+  <h1 class="ep2int">EpiDerm-2</h1>
+  <h4 class="ep2h4">Clasificador de Imágenes</h4>
+  <p class=" warning epiderm2txt">La información de las clases predecidas es provisoria, errónea y corresponde a otra patología. Si cree que su caso es de gravedad, consultar con un dermatólogo.</p>
+
+  <form id="epi-form">
+    <div class="dz" data-preview="#epi-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
+      <p>Arrastra una imagen aquí o <span class="link">haz clic</span> para elegir</p>
+      <input id="epi-file" name="imagen" type="file" accept="image/*" hidden>
+    </div>
+    <label class="checkboxlabel">
+      <input type="checkbox" id="consent1" required>
+      Entiendo que esto es informativo y no reemplaza atención médica.
+    </label>
+    <button type="submit" class="visit-welcome" style="margin-top:1rem">Enviar a la IA</button>
+  </form>
+
+  <div id="epi-preview-wrap" class="center">
+    <img id="epi-preview" class="preview hidden" alt="Vista previa">
+  </div>
+
+  <div id="epi-status"></div>
+  <div id="epi-results"></div>
+</section>
+<section id="paginas-apoyo" class="section content">
+<p>Esta sección está en desarrollo.</p>
+</section>
+    
+
+    <section id="acerca" class="section content">
+      <h2>Acerca de</h2>
+      <p>Esta aplicación está diseñada para ayudar a los jóvenes a entender mejor las condiciones dermatológicas utilizando inteligencia artificial.</p>
+    </section>
+
+ 
+  
+
+  <footer>
+    <p>Copyright 2025 Fernando Hidalgo Lecaros- Potenciado por GPT-4o y ResNet-50 <a href="https://coff.ee/lightningpal" rel="stylesheet" class="coffee">Buy me a Coffee ☕</a></p> 
+  </footer>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth, onAuthStateChanged,
+    signInWithEmailAndPassword, signOut,
+    createUserWithEmailAndPassword
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDGFsmAYbhCBdE3p2MB13BCZRbS_QMcDF4",
+    authDomain: "epidermyx.firebaseapp.com",
+    projectId: "epidermyx",
+    storageBucket: "epidermyx.firebasestorage.app",
+    messagingSenderId: "778733031188",
+    appId: "1:778733031188:web:2c360608694c20f183fc01",
+    measurementId: "G-239NPJ9656"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // --- UI refs
+  const titleEl    = document.getElementById("authTitle");
+  const statusEl   = document.getElementById("loginStatus");
+  const loginForm  = document.getElementById("loginForm");
+  const signupForm = document.getElementById("signupForm");
+  const toSignup   = document.getElementById("toSignup");
+  const toLogin    = document.getElementById("toLogin");
+  const logoutBtn  = document.getElementById("logoutBtn");
+
+
+  function show(view) {
+    if (view === "signup") {
+      loginForm.classList.add("hidden");
+      signupForm.classList.remove("hidden");
+      titleEl.textContent = "Crear cuenta";
+    } else {
+      signupForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+      titleEl.textContent = "Iniciar sesión";
+    }
+    statusEl.textContent = "";
+  }
+  toSignup?.addEventListener("click", e => { e.preventDefault(); show("signup"); });
+  toLogin?.addEventListener("click",  e => { e.preventDefault(); show("login"); });
+
+  // --- Login
+  loginForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value.trim();
+    const pass  = document.getElementById("loginPass").value;
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, pass);
+      const idToken = await cred.user.getIdToken(true);
+     // reCAPTCHA v2 checkbox token
+     let captchaToken = "";
+    try { captchaToken = grecaptcha.getResponse(); } catch {}
+     if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
+
+      const r = await fetch("/sessionLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
+        credentials: "include"  
+      });
+
+      statusEl.textContent = r.ok ? "Sesión iniciada" : "No se pudo crear sesión en el servidor";
+      if (r.ok) navigateTo?.("epiderm-1");
+     try { grecaptcha.reset(); } catch {}
+    } catch (err) {
+      statusEl.textContent = niceAuthError(err);
+      console.error(err);
+    }
+  });
+
+  
+  signupForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("signupEmail").value.trim();
+    const pass  = document.getElementById("signupPass").value;
+    const pass2 = document.getElementById("signupPass2").value;
+    if (pass !== pass2) { statusEl.textContent = "Las contraseñas no coinciden."; return; }
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      const idToken = await cred.user.getIdToken(true);
+     // reCAPTCHA v2 checkbox token
+     let captchaToken = "";
+     try { captchaToken = grecaptcha.getResponse(); } catch {}
+     if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
+
+      const r = await fetch("/sessionLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
+        credentials: "include"   
+      });
+
+      statusEl.textContent = r.ok ? "Cuenta creada y sesión iniciada" : "No se pudo crear sesión en el servidor";
+      if (r.ok) navigateTo?.("epiderm-1");
+     try { grecaptcha.reset(); } catch {}
+    } catch (err) {
+      statusEl.textContent = niceAuthError(err);
+      console.error(err);
+    }
+  });
+
+
+
+  logoutBtn?.addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      await fetch("/sessionLogout", { method: "POST", credentials: "include" });
+      statusEl.textContent = "Sesión cerrada";
+      show("login");
+    } catch (e) { console.error(e); }
+  });
+
+ 
+  onAuthStateChanged(auth, (user) => {
+    document.querySelectorAll(".requires-login")
+      .forEach(el => el.style.display = user ? "" : "none");
+    logoutBtn.classList.toggle("hidden", !user);
+  });
+
+
+  function niceAuthError(err) {
+    const code = (err?.code || "").replace("auth/", "");
+    switch (code) {
+      case "configuration-not-found": return "Habilita Email/Password en Firebase → Authentication → Sign-in method.";
+      case "invalid-email": return "Email inválido.";
+      case "email-already-in-use": return "Ese email ya está registrado.";
+      case "weak-password": return "La contraseña es muy débil (usa 6+ caracteres).";
+      case "wrong-password": return "Contraseña incorrecta.";
+      case "user-not-found": return "No existe una cuenta con ese email.";
+      default: return `Error: ${code || err?.message || err}`;
+    }
+  }
+</script>
+
+
+
+
+<script>
+    
+(() => {
+ 
+  ['dragover','drop'].forEach(evt =>
+    window.addEventListener(evt, e => e.preventDefault())
+  );
+
+  document.querySelectorAll('.dz').forEach(dz => {
+    const input   = dz.querySelector('input[type="file"]');
+    const preview = document.querySelector(dz.dataset.preview);
+
+    const show = (file) => {
+      if (!file || !preview) return;
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove('hidden');
+    };
+
+   
+    dz.addEventListener('click', () => input.click());
+    dz.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+    });
+
+    
+    ['dragenter','dragover'].forEach(ev =>
+      dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); })
+    );
+    ['dragleave','drop'].forEach(ev =>
+      dz.addEventListener(ev, () => dz.classList.remove('dragover'))
+    );
+
+    
+    dz.addEventListener('drop', e => {
+      const files = e.dataTransfer.files;
+      if (files && files[0]) { input.files = files; show(files[0]); }
+    });
+
+   
+    input.addEventListener('change', () => show(input.files?.[0]));
+  });
+})();
+
+
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      menu.classList.toggle('open');
+    }
+
+   function navigateTo(sectionId) {
+   
+    document.querySelectorAll('.section').forEach(sec => {
+        sec.style.display = 'none';
+        sec.classList.remove('active');
+    });
+
+    const target = document.getElementById(sectionId);
+    if (target) {
+        target.style.display = 'block'; 
+        target.classList.add('active');
+    }
+
+    
+    if (sectionId === 'guiadiagnostico') {
+        document.getElementById('guiadiagnostico').style.display = 'flex';
+    }
+
+    
+    const isInicio = sectionId === 'inicio';
+    document.querySelectorAll('.only-inicio').forEach(el => {
+        el.style.display = isInicio ? 'flex' : 'none';
+    });
+      
+      document.getElementById('menu').classList.remove('open');
+
+      
+      history.pushState(null, '', '/' + sectionId);
+    }
+
+    window.addEventListener('load', () => {
+      const path = location.pathname.replace('/', '') || 'inicio';
+      navigateTo(path);
+    });
+
+    window.addEventListener('popstate', () => {
+      const path = location.pathname.replace('/', '') || 'inicio';
+      navigateTo(path);
+    });
+
+    document.getElementById("ia-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+
+  const respuestaEl = document.getElementById("respuesta");
+  respuestaEl.innerHTML = "Cargando";
+  respuestaEl.classList.add("loading-dots");
+
+  try {
+    const res = await fetch("/analyze", {
+      method: "POST",
+      body: formData,
+      credentials: "include" 
+    });
+
+    const data = await res.json();
+    respuestaEl.classList.remove("loading-dots");
+    respuestaEl.innerHTML = data.result || "No se pudo obtener una respuesta.";
+  } catch (error) {
+    respuestaEl.classList.remove("loading-dots");
+    respuestaEl.innerHTML = "Ocurrió un error al procesar la solicitud.";
+  }
+});
+   
+
+  function checker(url){
+      var result = confirm('Esta acción provocará una redirección a otra página. ¿Deseas continuar?');
+        if (result = false){
+          event.preventDefault();
+        }
+        if (result = true){
+          window.location.href = url;
+        }
+  }
+
+
+
+// --- Class dictionary (EDITEDITEDITEDIT)
+const CLASS_INFO = {
+  0:  { name: "Acné", desc: "Obstrucción e inflamación del folículo pilosebáceo con comedones, pápulas o pústulas.", link: "http://localhost:2001/acne" },
+  1:  { name: "Cicatriz de acné", desc: "Cambios permanentes en la piel tras acné previo (atrófica, hipertrófica o queloide).", link: "http://localhost:2001/acne" },
+  2:  { name: "Alopecia", desc: "Cáncer cutáneo común de crecimiento lento; suele presentarse como pápula perlada.", link: "https://www.cancer.gov/espanol/tipos/piel" },
+  3:  { name: "Dermatitis Atópica", desc: "Lesión benigna, verrugosa, de aspecto \"pegado\" a la piel; frecuente con la edad.", link: "" },
+  4:  { name: "Carcinoma Basocelular", desc: "Lesión precancerosa por daño solar crónico; placa áspera o descamativa.", link: "" },
+  5:  { name: "Lunar Benigno", desc: "Acúmulo benigno de melanocitos; la mayoría de los lunares no son peligrosos.", link: "https://www.cancer.org/es/cancer/cancer-de-piel/no-melanoma/causas-riesgos-prevencion/lunares.html" },
+  6:  { name: "Alergia de Dermatitis", desc: "Proliferación benigna de vasos; suele ser roja/violácea.", link: "" },
+  7:  { name: "Eczema", desc: "Cáncer cutáneo que puede crecer y diseminarse; a menudo placa/nódulo queratósico.", link: "https://www.cancer.org/es/cancer/cancer-de-piel/no-melanoma.html" },
+  8:  { name: "Erythema", desc: "Lesión queratósica no maligna (categoría genérica).", link: "" },
+  9:  { name: "Herpes", desc: "Mácula hiperpigmentada bien delimitada, asociada a exposición solar.", link: "" },
+  10: { name: "Panadizo Herpético", desc: "Enfermedad inflamatoria crónica con placas eritematoescamosas.", link: "https://www.who.int/es/news-room/fact-sheets/detail/psoriasis" },
+  11: { name: "Hidradenitis Suppurativa", desc: "Inflamación pruriginosa de la piel; frecuentemente curso crónico y recidivante.", link: "" },
+  12: { name: "Keratosis", desc: "Eritema facial persistente, pápulas/pústulas; empeora con disparadores.", link: "" },
+  13: { name: "Melanoma", desc: "Dermatofitosis superficial; placa anular descamativa con borde activo.", link: "" },
+  14: { name: "Piel Normal", desc: "Pérdida adquirida de melanocitos; máculas acrómicas bien delimitadas.", link: "" },
+  15: { name: "Dermatitis Perorial", desc: "Proliferación benigna de vasos (habitual en lactantes).", link: "" },
+  16: { name: "Psoriasis", desc: "Lesiones umbilicadas por poxvirus; autolimitadas.", link: "" },
+  17: { name: "Rosacea", desc: "Lesión hiperqueratósica por VPH; superficie rugosa.", link: "" },
+  18: { name: "Dermatitis Seborreica", desc: "Habones pruriginosos evanescentes por liberación de histamina.", link: "" },
+  19: { name: "Dermatitis Seborreicapor VIH", desc: "Infección bacteriana superficial con costras melicéricas.", link: "" },
+  20: { name: "Urticaria", desc: "No se observan hallazgos dermatológicos relevantes.", link: "" },
+  21: { name: "Vitiligo", desc: "Neoplasia maligna de melanocitos; cambio ABCDE amerita evaluación urgente.", link: "https://www.cancer.gov/espanol/tipos/piel/paciente/tratamiento-melanoma-pdq" }
+};
+
+
+function normalizeLabel(raw) {
+  if (raw == null) return { key: null, text: "(desconocido)" };
+
+  const num = Number(raw);
+  if (Number.isInteger(num) && CLASS_INFO[num]) {
+    return { key: num, text: CLASS_INFO[num].name };
+  }
+
+
+
+  return { key: null, text: String(raw) };
+}
+
+function infoFor(raw) {
+  const n = normalizeLabel(raw);
+  if (n.key != null && CLASS_INFO[n.key]) {
+    return { name: CLASS_INFO[n.key].name, desc: CLASS_INFO[n.key].desc, link: CLASS_INFO[n.key].link || "" };
+  }
+  return { name: n.text, desc: "Descripción no disponible.", link: "" };
+}
+
+
+['dragover','drop'].forEach(evt =>
+  window.addEventListener(evt, e => e.preventDefault())
+);
+
+
+
+
+
+
+document.getElementById("epi-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fileInput = document.getElementById("epi-file");
+  const f = fileInput.files?.[0];
+  const statusEl = document.getElementById("epi-status");
+  const resultsEl = document.getElementById("epi-results");
+  const preview = document.getElementById("epi-preview");
+
+  if (!f) {
+    statusEl.textContent = "Por favor selecciona una imagen.";
+    return;
+  }
+
+  preview.src = URL.createObjectURL(f);
+  preview.style.display = "block";
+
+  statusEl.textContent = "Clasificando...";
+  resultsEl.innerHTML = "";
+
+  const fd = new FormData();
+  fd.append("imagen", f);
+
+  try {
+    const res = await fetch("/hf-classify", { method: "POST", body: fd });
+    const data = await res.json();
+    statusEl.textContent = "";
+
+    if (!res.ok || !data.ok) {
+      resultsEl.innerHTML = `<div style="color:#b00020">Error: ${data.error || res.statusText}</div>`;
+      return;
+    }
+
+      const preds = (data.predictions || []).slice(0, 3); // top-3
+  resultsEl.innerHTML = `
+    <h3>Predicciones (EpiDerm-2)</h3>
+    ${preds.map(p => {
+      const info = infoFor(p.label);
+      const pct  = (p.score * 100).toFixed(1);
+      const link = info.link ? ` <a href="${info.link}" target="_blank" rel="noopener">Ver más</a>` : "";
+      return `
+        <article class="pred-item" style="margin:0.5rem 0;padding:0.5rem 0;border-top:1px solid #eee">
+          <div><strong>${info.name}</strong> — ${pct}%</div>
+          <div style="color:#444">${info.desc}${link}</div>
+        </article>
+      `;
+    }).join("")}
+  `;
+
+  } catch (err) {
+    statusEl.textContent = "";
+    resultsEl.innerHTML = `<div style="color:#b00020">Error de red: ${String(err)}</div>`;
+  }
+});
+
+
+
+['dragover','drop'].forEach(evt =>
+  window.addEventListener(evt, e => e.preventDefault())
+);
+
+
+  </script>
