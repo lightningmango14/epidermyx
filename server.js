@@ -109,6 +109,7 @@ async function verifyRecaptcha(req, res, next) {
 }
 
 const SESSION_LOGIN_PATHS  = ["/sessionLogin",  "/api/sessionLogin"];
+const SESSION_SIGNUP_PATHS = ["/sessionSignup", "/api/sessionSignup"];
 const SESSION_LOGOUT_PATHS = ["/sessionLogout", "/api/sessionLogout"];
 const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
