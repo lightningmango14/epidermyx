@@ -27,6 +27,9 @@ app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
+const SESSION_LOGIN_PATHS  = ["/sessionLogin",  "/api/sessionLogin"];
+const SESSION_LOGOUT_PATHS = ["/sessionLogout", "/api/sessionLogout"];
+const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
 // Firebase Admin (env or local file)
 const admin = require("firebase-admin");
@@ -34,31 +37,31 @@ const admin = require("firebase-admin");
 
 let svc = null;
 
-// 1) Env var (Vercel / local)
+
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try { svc = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT); }
   catch (e) { console.warn("[boot] Bad FIREBASE_SERVICE_ACCOUNT JSON"); }
 }
 
-// 2) Local file fallback for dev
+
 if (!svc) {
   try { svc = require(path.join(__dirname, "serviceAccount.json")); }
-  catch { /* no local file */ }
+  catch { }
 }
 
-// 3) Initialize
+
 if (!admin.apps.length) {
   if (svc && svc.project_id) {
     admin.initializeApp({ credential: admin.credential.cert(svc) });
   } else {
-    // Last resort: ADC (GOOGLE_APPLICATION_CREDENTIALS must point to a JSON)
+
     admin.initializeApp({ credential: admin.credential.applicationDefault() });
   }
 }
 
 
 
-// Verify Google reCAPTCHA v2 (checkbox) for /sessionLogin
+
 async function verifyRecaptcha(req, res, next) {
   try {
     const token =
@@ -109,7 +112,7 @@ async function verifyRecaptcha(req, res, next) {
 
 
 
-app.post("/sessionLogin", express.json(), verifyRecaptcha, async (req, res) => {
+app.post(SESSION_LOGIN_PATHS, express.json(), verifyRecaptcha, async (req, res) => {
 
   try {
     const idToken = req.body?.idToken;
@@ -140,7 +143,7 @@ app.post("/sessionLogin", express.json(), verifyRecaptcha, async (req, res) => {
 
 //login
 
-app.post("/sessionLogout", (_req, res) => {
+app.post(SESSION_LOGOUT_PATHS, (_req, res) => {
   res.clearCookie("__session");
   res.json({ ok:true });
 });
@@ -480,7 +483,7 @@ app.get("/hf-sanity", async (_req, res) => {
 });
 
 
-app.get("/whoami", authRequired, (req, res) =>
+app.get( WHOAMI_PATHS, authRequired, (req, res) =>
   res.json({ ok: true, uid: req.user.uid, email: req.user.email || null })
 );
 
@@ -511,4 +514,6 @@ if (process.env.VERCEL) {
 } else {
   app.listen(PORT, () => console.log('Server listening on ' + PORT));
 }
+
+
 
