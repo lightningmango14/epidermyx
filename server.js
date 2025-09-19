@@ -336,9 +336,17 @@ app.use(cors({
   credentials: true
 }));
 
+// let CORS handle preflight everywhere
+app.options('*', cors());
+
+// (optional: explicit for key routes, harmless duplicates)
+app.options(['/api/sessionLogin','/sessionLogin'], cors());
+app.options(['/api/analyze','/analyze'], cors());
+app.options(['/api/hf-classify','/hf-classify'], cors());
+
 app.options('*', cors()); 
 
-app.use(express.json());
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/api/ping', (req, res) => res.json({ ok: true, where: 'server', path: req.path }));
