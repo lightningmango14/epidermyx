@@ -98,13 +98,13 @@
     <section id="epiderm-1" class="section content">
   <h1 class="ep2int">EpiDerm-1</h1>
   <h4 class="ep2h4">Consulta con IA</h4>
-
+  <p>Para acceder a EpiDerm-1, debes iniciar sesión.</p>
   <form id="ia-form" class="requires-login">
     <div class="dz" data-preview="#ia-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
       <p>Arrastra una imagen aquí o haz clic en el espacio para elegir</p>
-      <input id="ia-file" name="imagen" type="file" accept="image/*" hidden>
+      <input id="ia-file" name="imagen" type="file" accept="image/*" requiredhidden>
     </div>
-    <textarea name="pregunta" placeholder="¿Qué deseas saber?"></textarea>
+    <textarea name="pregunta" placeholder="¿Qué deseas saber?" required></textarea>
     <label class="checkboxlabel">
       <input type="checkbox" id="consent" required>
       Entiendo que esto es informativo y no reemplaza atención médica.
