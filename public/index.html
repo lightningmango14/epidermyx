@@ -330,18 +330,7 @@
     try {
       const cred = await signInWithEmailAndPassword(auth, email, pass);
       const idToken = await cred.user.getIdToken(true);
-     // reCAPTCHA v2 checkbox token
-     let captchaToken = "";
-    try { captchaToken = grecaptcha.getResponse(); } catch {}
-     if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
-
-      const r = await fetch("/sessionLogin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
-        credentials: "include"  
-      });
-
+     
       statusEl.textContent = r.ok ? "Sesión iniciada" : "No se pudo crear sesión en el servidor";
       if (r.ok) navigateTo?.("epiderm-1");
      try { grecaptcha.reset(); } catch {}
@@ -361,8 +350,17 @@
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       const idToken = await cred.user.getIdToken(true);
-     // reCAPTCHA v2 checkbox token
     
+    let captchaToken = "";
+     try { captchaToken = grecaptcha.getResponse(); } catch {}
+     if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
+
+      const r = await fetch("/sessionLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
+        credentials: "include"   
+      });
 
       statusEl.textContent = r.ok ? "Cuenta creada y sesión iniciada" : "No se pudo crear sesión en el servidor";
       if (r.ok) navigateTo?.("epiderm-1");
