@@ -368,10 +368,10 @@ loginForm?.addEventListener("submit", async (e) => {
      try { captchaToken = grecaptcha.getResponse(); } catch {}
      if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
 
-      const r = await fetch("/api/sessionLogin", {
+      const r = await fetch("/api/sessionSignup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
+        body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
         credentials: "include"   
       });
 
