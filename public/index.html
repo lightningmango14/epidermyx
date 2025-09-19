@@ -331,6 +331,14 @@
       const cred = await signInWithEmailAndPassword(auth, email, pass);
       const idToken = await cred.user.getIdToken(true);
      
+
+      const r = await fetch("/sessionLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      
+        credentials: "include"  
+      });
+
       statusEl.textContent = r.ok ? "Sesión iniciada" : "No se pudo crear sesión en el servidor";
       if (r.ok) navigateTo?.("epiderm-1");
      try { grecaptcha.reset(); } catch {}
