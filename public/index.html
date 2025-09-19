@@ -323,7 +323,7 @@
   toLogin?.addEventListener("click",  e => { e.preventDefault(); show("login"); });
 
   // --- Login
-  // inside <script type="module"> (your auth code)
+
 loginForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const email = document.getElementById("loginEmail").value.trim();
@@ -368,7 +368,7 @@ loginForm?.addEventListener("submit", async (e) => {
      try { captchaToken = grecaptcha.getResponse(); } catch {}
      if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
 
-      const r = await fetch("/sessionLogin", {
+      const r = await fetch("/api/sessionLogin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
        body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
@@ -518,7 +518,7 @@ loginForm?.addEventListener("submit", async (e) => {
   respuestaEl.classList.add("loading-dots");
 
   try {
-    const res = await fetch("/analyze", {
+    const res = await fetch("/api/analyze", {
       method: "POST",
       body: formData,
       credentials: "include" 
@@ -627,7 +627,7 @@ document.getElementById("epi-form").addEventListener("submit", async (e) => {
   fd.append("imagen", f);
 
   try {
-    const res = await fetch("/hf-classify", { method: "POST", body: fd });
+    const res = await fetch("/api/hf-classify", { method: "POST", body: fd });
     const data = await res.json();
     statusEl.textContent = "";
 
