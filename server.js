@@ -27,9 +27,7 @@ app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-const SESSION_LOGIN_PATHS  = ["/sessionLogin",  "/api/sessionLogin"];
-const SESSION_LOGOUT_PATHS = ["/sessionLogout", "/api/sessionLogout"];
-const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
+
 
 // Firebase Admin (env or local file)
 const admin = require("firebase-admin");
@@ -110,27 +108,22 @@ async function verifyRecaptcha(req, res, next) {
   }
 }
 
+const SESSION_LOGIN_PATHS  = ["/sessionLogin",  "/api/sessionLogin"];
+const SESSION_LOGOUT_PATHS = ["/sessionLogout", "/api/sessionLogout"];
+const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
 
-app.post(SESSION_LOGIN_PATHS, express.json(), verifyRecaptcha, async (req, res) => {
-
+app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
   try {
     const idToken = req.body?.idToken;
     if (!idToken) return res.status(400).json({ ok:false, error:"Missing idToken" });
 
-
-    const decoded = await admin.auth().verifyIdToken(idToken);
-    console.log("[/sessionLogin] decoded aud:", decoded.aud, "iss:", decoded.iss, "uid:", decoded.uid);
-
-    const expiresIn = 5 * 24 * 60 * 60 * 1000; 
+    const expiresIn = 5 * 24 * 60 * 60 * 1000;
     const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
-
     res.cookie("__session", cookie, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production", 
-      path: "/",                                     
-      maxAge: expiresIn
+      httpOnly: true, sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/", maxAge: expiresIn
     });
     return res.json({ ok:true });
   } catch (err) {
@@ -139,7 +132,28 @@ app.post(SESSION_LOGIN_PATHS, express.json(), verifyRecaptcha, async (req, res) 
   }
 });
 
+app.post(SESSION_SIGNUP_PATHS, express.json(), verifyRecaptcha, async (req, res) => {
+  try {
+    const idToken = req.body?.idToken;
+    if (!idToken) return res.status(400).json({ ok:false, error:"Missing idToken" });
 
+    const expiresIn = 5 * 24 * 60 * 60 * 1000;
+    const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
+    res.cookie("__session", cookie, {
+      httpOnly: true, sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/", maxAge: expiresIn
+    });
+    return res.json({ ok:true });
+  } catch (err) {
+    console.error("[/sessionSignup] ERROR:", err);
+    return res.status(401).json({ ok:false, error:"Session creation failed" });
+  }
+});
+
+// keep logout & whoami as you had, but with aliases:
+app.post(SESSION_LOGOUT_PATHS, (_req,res)=>{ res.clearCookie("__session"); res.json({ok:true}); });
+app.get(WHOAMI_PATHS, authRequired, (req,res)=> res.json({ ok:true, uid:req.user.uid, email:req.user.email || null }));
 
 //login
 
