@@ -28,37 +28,38 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 
+
 // Firebase Admin (env or local file)
 const admin = require("firebase-admin");
 
 
 let svc = null;
 
-// 1) Env var (Vercel / local)
+
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try { svc = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT); }
   catch (e) { console.warn("[boot] Bad FIREBASE_SERVICE_ACCOUNT JSON"); }
 }
 
-// 2) Local file fallback for dev
+
 if (!svc) {
   try { svc = require(path.join(__dirname, "serviceAccount.json")); }
-  catch { /* no local file */ }
+  catch { }
 }
 
-// 3) Initialize
+
 if (!admin.apps.length) {
   if (svc && svc.project_id) {
     admin.initializeApp({ credential: admin.credential.cert(svc) });
   } else {
-    // Last resort: ADC (GOOGLE_APPLICATION_CREDENTIALS must point to a JSON)
+
     admin.initializeApp({ credential: admin.credential.applicationDefault() });
   }
 }
 
 
 
-// Verify Google reCAPTCHA v2 (checkbox) for /sessionLogin
+
 async function verifyRecaptcha(req, res, next) {
   try {
     const token =
@@ -88,11 +89,11 @@ async function verifyRecaptcha(req, res, next) {
 
     const data = await r.json();
 
-    // (optional) pin allowed hostnames
+
     const allowed = new Set([
       'localhost','127.0.0.1',
       'epidermyx.com','www.epidermyx.com',
-      // add your <project>.vercel.app later
+
     ]);
 
     if (!data.success || (data.hostname && !allowed.has(data.hostname))) {
@@ -107,17 +108,23 @@ async function verifyRecaptcha(req, res, next) {
   }
 }
 
+const SESSION_LOGIN_PATHS  = ["/sessionLogin",  "/api/sessionLogin"];
+const SESSION_SIGNUP_PATHS = ["/sessionSignup", "/api/sessionSignup"];
+const SESSION_LOGOUT_PATHS = ["/sessionLogout", "/api/sessionLogout"];
+const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
 
-app.post("/sessionLogin", express.json(), verifyRecaptcha, async (req, res) => {
 
+
+app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
   try {
     const idToken = req.body?.idToken;
-    if (!idToken) return res.status(400).json({ ok:false, error:"Missing idToken" });
+    if (!idToken) {
+      return res.status(400).json({ ok: false, error: "Missing idToken" });
+    }
 
 
-    const decoded = await admin.auth().verifyIdToken(idToken);
-    console.log("[/sessionLogin] decoded aud:", decoded.aud, "iss:", decoded.iss, "uid:", decoded.uid);
+    await admin.auth().verifyIdToken(idToken);
 
     const expiresIn = 5 * 24 * 60 * 60 * 1000; 
     const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
@@ -125,22 +132,45 @@ app.post("/sessionLogin", express.json(), verifyRecaptcha, async (req, res) => {
     res.cookie("__session", cookie, {
       httpOnly: true,
       sameSite: "lax",
-      secure: process.env.NODE_ENV === "production", 
-      path: "/",                                     
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
       maxAge: expiresIn
+    });
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("[/sessionLogin] ERROR:", err);
+    return res.status(401).json({ ok: false, error: "Session creation failed" });
+  }
+});
+
+
+app.post(SESSION_SIGNUP_PATHS, express.json(), verifyRecaptcha, async (req, res) => {
+  try {
+    const idToken = req.body?.idToken;
+    if (!idToken) return res.status(400).json({ ok:false, error:"Missing idToken" });
+
+    const expiresIn = 5 * 24 * 60 * 60 * 1000;
+    const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
+    res.cookie("__session", cookie, {
+      httpOnly: true, sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/", maxAge: expiresIn
     });
     return res.json({ ok:true });
   } catch (err) {
-    console.error("[/sessionLogin] ERROR:", err);
+    console.error("[/sessionSignup] ERROR:", err);
     return res.status(401).json({ ok:false, error:"Session creation failed" });
   }
 });
 
 
+app.post(SESSION_LOGOUT_PATHS, (_req,res)=>{ res.clearCookie("__session"); res.json({ok:true}); });
+app.get(WHOAMI_PATHS, authRequired, (req,res)=> res.json({ ok:true, uid:req.user.uid, email:req.user.email || null }));
 
 //login
 
-app.post("/sessionLogout", (_req, res) => {
+app.post(SESSION_LOGOUT_PATHS, (_req, res) => {
   res.clearCookie("__session");
   res.json({ ok:true });
 });
@@ -306,7 +336,11 @@ app.use(cors({
 }));
 
 
-app.use(express.json());
+
+
+
+
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get('/api/ping', (req, res) => res.json({ ok: true, where: 'server', path: req.path }));
@@ -375,7 +409,7 @@ async function hfImageClassify(model, imageBuffer, { maxRetries = 2, retryDelayM
 // --- Routes ---
 
 // EpiDerm-1 
-const ANALYZE_PATHS = ["/analyze", "/api/analyze"]; // support old and new
+const ANALYZE_PATHS = ["/analyze", "/api/analyze"]; 
 app.post(ANALYZE_PATHS, authRequired, usageLimiter({ daily: 3, monthly: 90 }), upload.single("imagen"), async (req, res) => {
     try {
       if (!req.file) {
@@ -452,7 +486,7 @@ return res.json({
 
 //hhtft
 app.get("/hf-sanity", async (_req, res) => {
-  const slug = "lightningpal/epiderm2";          // <-- your slug
+  const slug = "lightningpal/epiderm2";         
   const r = await fetch(`https://huggingface.co/api/models/${slug}`, {
     headers: (process.env.HF_TOKEN?.startsWith("hf_"))
       ? { Authorization: `Bearer ${process.env.HF_TOKEN}` } : {}
@@ -480,7 +514,7 @@ app.get("/hf-sanity", async (_req, res) => {
 });
 
 
-app.get("/whoami", authRequired, (req, res) =>
+app.get( WHOAMI_PATHS, authRequired, (req, res) =>
   res.json({ ok: true, uid: req.user.uid, email: req.user.email || null })
 );
 
@@ -507,8 +541,7 @@ app.get(/.*/, (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 if (process.env.VERCEL) {
-  module.exports = app; // Vercel imports this in api/index.js
+  module.exports = app; 
 } else {
   app.listen(PORT, () => console.log('Server listening on ' + PORT));
 }
-

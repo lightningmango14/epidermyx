@@ -770,3 +770,14 @@ footer {
   text-align: center;
   padding-bottom: 1%;
 }
+
+.credits{
+  font-size: smaller;
+  color: #808080;
+}
+
+.tooltipcontainer{
+  display: flex;
+  justify-content: start;
+  gap: 5px;
+}

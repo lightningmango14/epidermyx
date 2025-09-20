@@ -7,6 +7,8 @@
   <title>EpiDermyx (beta)</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="styles.css" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1996724872440260"
+     crossorigin="anonymous"></script>
 </head>
 <body>
 <main>
@@ -63,6 +65,7 @@
     <form id="loginForm">
       <input id="loginEmail" type="email" placeholder="Email" required>
       <input id="loginPass" type="password" placeholder="Contraseña" required>
+      
       <button type="submit" class="btn">Entrar</button>
       <p class="muted" style="margin-top:8px">
         ¿No tienes cuenta? <a href="#" id="toSignup">Crear una</a>
@@ -93,13 +96,13 @@
     <section id="epiderm-1" class="section content">
   <h1 class="ep2int">EpiDerm-1</h1>
   <h4 class="ep2h4">Consulta con IA</h4>
-
+  
   <form id="ia-form" class="requires-login">
     <div class="dz" data-preview="#ia-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
       <p>Arrastra una imagen aquí o haz clic en el espacio para elegir</p>
-      <input id="ia-file" name="imagen" type="file" accept="image/*" hidden>
+      <input id="ia-file" name="imagen" type="file" accept="image/*" requiredhidden>
     </div>
-    <textarea name="pregunta" placeholder="¿Qué deseas saber?"></textarea>
+    <textarea name="pregunta" placeholder="¿Qué deseas saber?" required></textarea>
     <label class="checkboxlabel">
       <input type="checkbox" id="consent" required>
       Entiendo que esto es informativo y no reemplaza atención médica.
@@ -140,7 +143,7 @@
       <div class="acnediv">
         <div class="acnediv3">
           <a href="#" onclick="navigateTo('alopeciaareata')" class="linkunderline">
-            <img src="seboderm1.jpg" alt="Alopecia Areata Image" class="acneimg">
+            <img src="Alopecia_areata_1.jpg" alt="Alopecia Areata Image" class="acneimg">
             <div class="acnediv2">
               <p class="acnetxt">Alopecia Areata</p>
             </div>
@@ -149,20 +152,20 @@
       </div>
       <div class="acnediv">
         <div class="acnediv3">
-          <a href="#" onclick="navigateTo('Seborrheic Dermatitis')" class="linkunderline">
+          <a href="#" onclick="navigateTo('carcinomabasocelular')" class="linkunderline">
             <img src="seboderm1.jpg" alt="Image of Seborrheic Dermatitis" class="acneimg">
             <div class="acnediv2">
-              <p class="acnetxt">Seborrheic Dermatitis</p>
+              <p class="acnetxt">Carcinoma Basocelular</p>
             </div>
           </a>
         </div>
       </div>
       <div class="acnediv">
         <div class="acnediv3">
-          <a href="#" onclick="navigateTo('Seborrheic Dermatitis')" class="linkunderline">
-            <img src="seboderm1.jpg" alt="Image of Seborrheic Dermatitis" class="acneimg">
+          <a href="#" onclick="navigateTo('dermatitisseborreica')" class="linkunderline">
+            <img src="seboderm1.jpg" alt="Imagen de Dermatitis Seborreica" class="acneimg">
             <div class="acnediv2">
-              <p class="acnetxt">Seborrheic Dermatitis</p>
+              <p class="acnetxt">Dermatitis Seborreica</p>
             </div>
           </a>
         </div>
@@ -174,11 +177,34 @@
         <h1 class="sectiontitle">Acné</h1>
         <h4 class="padding1">Una de las enfermedades más comunes, especialmente en etapas de desarrollo hormonal, es el acné.</h4> <!--fix all tooltips-->
         <img src="acnesite2.jpeg" alt="Image of a person diagnosed with Acne" class="acneimg2">
-        <p>Según Pérez-Cotapos (2003), “Corresponde a una enfermedad crónica del aparato pilo sebáceo en la que se forman comedones abiertos y cerrados (puntos negros y blancos), pápulas, pústulas, nódulos y quistes en los casos más severos”. Surita, A.H y otros autores indican que es resultado de la hipersensbilidad de las glándulas pilosebáceas hacia niveles normales de andrógeno circulante.</p>
-        <p>Factores más comunes implicados en su formación incluyen:</p> <!--on the previous line, make sure to remember tooltipping "pilosebaceous glands" and maybe the definition of hypersensitivity-->
+          <div>
+          <p>
+            <div class="tooltipcontainer">
+              <div>
+                Según Pérez-Cotapos (2003), “Corresponde a una enfermedad crónica del aparato pilo sebáceo en la que se forman comedones abiertos y cerrados (puntos negros y blancos), pápulas, pústulas, nódulos y quistes en los casos más severos”. Surita, A.H y otros autores indican que es resultado de la hipersensbilidad de las
+              </div> 
+               <div class="tooltip">glándulas pilosebáceas
+                 <span class="tooltiptext">(unidad) que incluye al folículo piloso (donde nace el pelo) y la glándula sebácea (que produce el sebo)</span>
+               </div> 
+               <div>
+               hacia niveles normales de andrógeno circulante.
+              </div>
+            </div>
+          </p>
+        
+            <p>Factores más comunes implicados en su formación incluyen:</p> <!--on the previous line, make sure to remember tooltipping "pilosebaceous glands" and maybe the definition of hypersensitivity-->
         <div class="acneul">
           <ul class="acneul">
-            <li>Trastornos de la <div class="tooltip">queratinización del conducto pilosebáceo<span class="tooltiptext">Acumulación de queratina y células muertas en el canal del pelo y glándula sebácea que obstruye el poro.</span></div></li>
+            <li>
+              <div class="tooltipcontainer">
+                <div>
+                  Trastornos de la
+                </div>
+                <div class="tooltip"> queratinización del conducto pilosebáceo
+                  <span class="tooltiptext">Acumulación de queratina y células muertas en el canal del pelo y glándula sebácea que obstruye el poro.</span>
+                </div>
+              </div>
+            </li>
             <li>Aumento en la producción del sebo</li>
             <li>Proliferación (crecimiento) de población de bacterias como Propionibacterium acnes</li>
             <li>Procesos Inflamatorios</li>
@@ -230,34 +256,37 @@
       <button type="submit" onclick="checker('https://www.cancer.gov/espanol/tipos/piel/paciente/tratamiento-melanoma-pdq')" class="visit-welcome" >Visitar Artículo NIH</button>
     </section>
 
+    <section id="carcinomabasocelular" class="section content">
 
-<section id="epiderm-2" class="section content">
-  <h1 class="ep2int">EpiDerm-2</h1>
-  <h4 class="ep2h4">Clasificador de Imágenes</h4>
-  <p class=" warning epiderm2txt">La información de las clases predecidas es provisoria, errónea y corresponde a otra patología. Si cree que su caso es de gravedad, consultar con un dermatólogo.</p>
+    </section>
+    
+    <section id="epiderm-2" class="section content">
+      <h1 class="ep2int">EpiDerm-2</h1>
+      <h4 class="ep2h4">Clasificador de Imágenes</h4>
+      <p class=" warning epiderm2txt">La información de las clases predecidas es provisoria, errónea y corresponde a otra patología. Si cree que su caso es de gravedad, consultar con un dermatólogo.</p>
 
-  <form id="epi-form">
-    <div class="dz" data-preview="#epi-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
-      <p>Arrastra una imagen aquí o <span class="link">haz clic</span> para elegir</p>
-      <input id="epi-file" name="imagen" type="file" accept="image/*" hidden>
-    </div>
-    <label class="checkboxlabel">
-      <input type="checkbox" id="consent1" required>
-      Entiendo que esto es informativo y no reemplaza atención médica.
-    </label>
-    <button type="submit" class="visit-welcome" style="margin-top:1rem">Enviar a la IA</button>
-  </form>
+      <form id="epi-form">
+        <div class="dz" data-preview="#epi-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
+          <p>Arrastra una imagen aquí o <span class="link">haz clic</span> para elegir</p>
+          <input id="epi-file" name="imagen" type="file" accept="image/*" hidden>
+        </div>
+        <label class="checkboxlabel">
+          <input type="checkbox" id="consent1" required>
+          Entiendo que esto es informativo y no reemplaza atención médica.
+        </label>
+        <button type="submit" class="visit-welcome" style="margin-top:1rem">Enviar a la IA</button>
+      </form>
 
-  <div id="epi-preview-wrap" class="center">
-    <img id="epi-preview" class="preview hidden" alt="Vista previa">
-  </div>
+      <div id="epi-preview-wrap" class="center">
+        <img id="epi-preview" class="preview hidden" alt="Vista previa">
+      </div>
 
-  <div id="epi-status"></div>
-  <div id="epi-results"></div>
-</section>
-<section id="paginas-apoyo" class="section content">
-<p>Esta sección está en desarrollo.</p>
-</section>
+      <div id="epi-status"></div>
+      <div id="epi-results"></div>
+    </section>
+    <section id="paginas-apoyo" class="section content">
+    <p>Esta sección está en desarrollo.</p>
+    </section>
     
 
     <section id="acerca" class="section content">
@@ -320,33 +349,35 @@
   toLogin?.addEventListener("click",  e => { e.preventDefault(); show("login"); });
 
   // --- Login
-  loginForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("loginEmail").value.trim();
-    const pass  = document.getElementById("loginPass").value;
-    try {
-      const cred = await signInWithEmailAndPassword(auth, email, pass);
-      const idToken = await cred.user.getIdToken(true);
-     // reCAPTCHA v2 checkbox token
-     let captchaToken = "";
-    try { captchaToken = grecaptcha.getResponse(); } catch {}
-     if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
 
-      const r = await fetch("/sessionLogin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
-        credentials: "include"  
-      });
+loginForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("loginEmail").value.trim();
+  const pass  = document.getElementById("loginPass").value;
 
-      statusEl.textContent = r.ok ? "Sesión iniciada" : "No se pudo crear sesión en el servidor";
-      if (r.ok) navigateTo?.("epiderm-1");
-     try { grecaptcha.reset(); } catch {}
-    } catch (err) {
-      statusEl.textContent = niceAuthError(err);
-      console.error(err);
+  try {
+    const cred    = await signInWithEmailAndPassword(auth, email, pass);
+    const idToken = await cred.user.getIdToken(true);
+
+    const r = await fetch("/api/sessionLogin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ idToken })
+    });
+
+    if (r.ok) {
+      statusEl.textContent = "Sesión iniciada";
+      navigateTo?.("epiderm-1");
+    } else {
+      statusEl.textContent = "No se pudo crear sesión en el servidor";
     }
-  });
+  } catch (err) {
+    statusEl.textContent = niceAuthError(err);
+    console.error(err);
+  }
+});
+
 
   
   signupForm?.addEventListener("submit", async (e) => {
@@ -358,15 +389,15 @@
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, pass);
       const idToken = await cred.user.getIdToken(true);
-     // reCAPTCHA v2 checkbox token
-     let captchaToken = "";
+    
+    let captchaToken = "";
      try { captchaToken = grecaptcha.getResponse(); } catch {}
      if (!captchaToken) { statusEl.textContent = 'Por favor marca "No soy un robot".'; return; }
 
-      const r = await fetch("/sessionLogin", {
+      const r = await fetch("/api/sessionSignup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
+        body: JSON.stringify({ idToken, "g-recaptcha-response": captchaToken }),
         credentials: "include"   
       });
 
@@ -384,7 +415,7 @@
   logoutBtn?.addEventListener("click", async () => {
     try {
       await signOut(auth);
-      await fetch("/sessionLogout", { method: "POST", credentials: "include" });
+      await fetch("/api/sessionLogout", { method: "POST", credentials: "include" });
       statusEl.textContent = "Sesión cerrada";
       show("login");
     } catch (e) { console.error(e); }
@@ -513,7 +544,7 @@
   respuestaEl.classList.add("loading-dots");
 
   try {
-    const res = await fetch("/analyze", {
+    const res = await fetch("/api/analyze", {
       method: "POST",
       body: formData,
       credentials: "include" 
@@ -622,7 +653,7 @@ document.getElementById("epi-form").addEventListener("submit", async (e) => {
   fd.append("imagen", f);
 
   try {
-    const res = await fetch("/hf-classify", { method: "POST", body: fd });
+    const res = await fetch("/api/hf-classify", { method: "POST", body: fd });
     const data = await res.json();
     statusEl.textContent = "";
 
