@@ -336,14 +336,9 @@ app.use(cors({
 }));
 
 
-app.options('*', cors());
 
 
-app.options(['/api/sessionLogin','/sessionLogin'], cors());
-app.options(['/api/analyze','/analyze'], cors());
-app.options(['/api/hf-classify','/hf-classify'], cors());
 
-app.options('*', cors()); 
 
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -550,6 +545,3 @@ if (process.env.VERCEL) {
 } else {
   app.listen(PORT, () => console.log('Server listening on ' + PORT));
 }
-
-
-
