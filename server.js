@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 
 
+
 // Firebase Admin (env or local file)
 const admin = require("firebase-admin");
 
@@ -545,3 +546,4 @@ if (process.env.VERCEL) {
 } else {
   app.listen(PORT, () => console.log('Server listening on ' + PORT));
 }
+
