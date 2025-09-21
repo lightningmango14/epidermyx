@@ -22,6 +22,19 @@ const cookieParser = require("cookie-parser");
 const app = express();
 
 
+
+app.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    return res.status(204).end();
+  }
+  next();
+});
+
+
 app.use(cookieParser());
 
 app.use(express.json({ limit: '1mb' }));
@@ -43,31 +56,35 @@ app.use((req, res, next) => {
   next();
 });
 
-const admin = require("firebase-admin");
 
 
-let svc = null;
+let _admin = null;
 
+function getAdmin() {
+  if (_admin) return _admin;
+  const admin = require('firebase-admin');
 
-if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  try { svc = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT); }
-  catch (e) { console.warn("[boot] Bad FIREBASE_SERVICE_ACCOUNT JSON"); }
-}
-
-
-if (!svc) {
-  try { svc = require(path.join(__dirname, "serviceAccount.json")); }
-  catch { }
-}
-
-
-if (!admin.apps.length) {
-  if (svc && svc.project_id) {
-    admin.initializeApp({ credential: admin.credential.cert(svc) });
-  } else {
-
-    admin.initializeApp({ credential: admin.credential.applicationDefault() });
+  let svc = null;
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try { svc = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT); }
+    catch { throw new Error("[boot] Bad FIREBASE_SERVICE_ACCOUNT JSON"); }
   }
+
+  if (!admin.apps.length) {
+    if (svc && svc.project_id && svc.client_email && svc.private_key) {
+      admin.initializeApp({ credential: admin.credential.cert(svc) });
+    } else {
+      if (process.env.VERCEL) {
+        // On Vercel we require the service account in an env var
+        throw new Error("FIREBASE_SERVICE_ACCOUNT env var is required on Vercel.");
+      }
+      // Local dev can use ADC (set GOOGLE_APPLICATION_CREDENTIALS if you want)
+      admin.initializeApp({ credential: admin.credential.applicationDefault() });
+    }
+  }
+
+  _admin = admin;
+  return _admin;
 }
 
 
@@ -131,6 +148,7 @@ const WHOAMI_PATHS         = ["/whoami",        "/api/whoami"];
 
 app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
   try {
+    const admin = getAdmin(); 
     const idToken = req.body?.idToken;
     if (!idToken) {
       return res.status(400).json({ ok: false, error: "Missing idToken" });
@@ -160,6 +178,7 @@ app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
 
 app.post(SESSION_SIGNUP_PATHS, express.json(), verifyRecaptcha, async (req, res) => {
   try {
+    const admin = getAdmin(); 
     const idToken = req.body?.idToken;
     if (!idToken) return res.status(400).json({ ok:false, error:"Missing idToken" });
 
@@ -189,6 +208,7 @@ app.post(SESSION_LOGOUT_PATHS, (_req, res) => {
 });
 
 async function authRequired(req, res, next) {
+  const admin = getAdmin(); 
   const raw = req.cookies?.__session;
   if (!raw) {
     console.warn("[authRequired] no __session cookie");
