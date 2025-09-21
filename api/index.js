@@ -1,2 +1,2 @@
-const app = require('../server');   // loads your Express app
-module.exports = (req, res) => app(req, res);
+const app = require('../server');
+module.exports = app;
