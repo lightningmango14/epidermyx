@@ -532,10 +532,6 @@ app.get( WHOAMI_PATHS, authRequired, (req, res) =>
 );
 
 
-app.use('/api', (req, res, next) => {
-  if (!res.headersSent) return res.status(404).json({ error: 'Not found' });
-  next();
-});
 
 app.use((err, req, res, _next) => {
   console.error('[ERROR]', err);
