@@ -1,9 +1,10 @@
 // api/ok.js
-export default async function handler(req, res) {
+module.exports = (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   res.status(200).json({
+    ok: true,
+    at: '/api/ok',
     method: req.method,
-    path: req.url,
-    headers: req.headers,
+    url: req.url
   });
-}
+};
