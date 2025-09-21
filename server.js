@@ -34,6 +34,15 @@ app.use((req, res, next) => {
 });
 
 
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api') || req.path === '/analyze' || req.path === '/hf-classify') {
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('CDN-Cache-Control', 'no-store');
+    res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+  }
+  next();
+});
+
 const admin = require("firebase-admin");
 
 
