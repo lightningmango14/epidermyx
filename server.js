@@ -28,9 +28,12 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store');
+  next();
+});
 
 
-// Firebase Admin (env or local file)
 const admin = require("firebase-admin");
 
 
