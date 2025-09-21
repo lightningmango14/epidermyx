@@ -1,12 +1,25 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ],
+
   "functions": {
-    "api/index.js": { "memory": 1536, "maxDuration": 20 }
-  }
+    "api/*.js": { "runtime": "nodejs20.x" }
+  },
+
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "^(?!/api/).*$", "dest": "/index.html" }
+  ],
+
+  
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "CDN-Cache-Control", "value": "no-store" },
+        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" }
+      ]
+    }
+  ]
 }
 
