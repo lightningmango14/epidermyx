@@ -1,22 +1,21 @@
 {
   "name": "code1",
   "version": "1.0.0",
-  "description": "",
-  "private": true,
-  "type": "commonjs",
   "main": "server.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "engines": {
-    "node": "18.x || 20.x"
-  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@huggingface/inference": "^4.7.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dompurify": "^3.2.6",
     "dotenv": "^16.6.1",
-    "express": "^4.19.2",
+    "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "firebase": "^12.2.1",
     "firebase-admin": "^13.5.0",
@@ -24,9 +23,10 @@
     "https-proxy-agent": "^7.0.6",
     "multer": "^2.0.2",
     "node-fetch": "^3.3.2",
-    "openai": "^5.13.1",
-    "serverless-http": "^3.2.0",
-    "dompurify": "^3.2.6"
-  }
+    "openai": "^5.13.1"
+  },
+  "description": ""
+  
 }
+
 
