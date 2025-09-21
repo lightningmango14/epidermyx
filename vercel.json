@@ -1,20 +1,12 @@
 {
   "version": 2,
-  "builds": [{ "src": "api/index.js", "use": "@vercel/node" }],
   "routes": [
-    { "src": "^/api/(.*)", "dest": "api/index.js" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "handle": "filesystem" },
-    { "src": "^(?!/api/).*", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "/index.html" }
   ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store" },
-        { "key": "CDN-Cache-Control", "value": "no-store" },
-        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" }
-      ]
-    }
-  ]
+  "functions": {
+    "api/index.js": { "memory": 1536, "maxDuration": 20 }
+  }
 }
 
