@@ -316,65 +316,53 @@ app.get("/me/usage", authRequired, (req, res) => {
 
 
 
-async function callSpacePredict(spaceUrl, imageBuffer, { filename = "image.jpg", mime = "image/jpeg" } = {}) {
-  const url = (spaceUrl || "").replace(/\/+$/, ""); 
-  if (!url) throw new Error("SPACE_URL missing");
+// Replace your whole callSpacePredict with this
+async function callSpacePredict(
+  spaceUrl,
+  imageBuffer,
+  { filename = "image.jpg", mime = "image/jpeg" } = {}
+) {
+  const SPACE_TRY_MS = 8000; // single quick try against the Space
+  const model = process.env.HF_MODEL_SLUG || "lightningpal/epiderm2";
 
-
-  async function postMultipart(fullUrl, fieldName) {
-    const boundary = '----spaceForm_' + Math.random().toString(16).slice(2);
+  const postMultipart = async (fullUrl, fieldName, ms = SPACE_TRY_MS) => {
+    const boundary = "----spaceForm_" + Math.random().toString(16).slice(2);
     const body = Buffer.concat([
       Buffer.from(
         `--${boundary}\r\n` +
-        `Content-Disposition: form-data; name="${fieldName}"; filename="${filename}"\r\n` +
-        `Content-Type: ${mime}\r\n\r\n`
+          `Content-Disposition: form-data; name="${fieldName}"; filename="${filename}"\r\n` +
+          `Content-Type: ${mime}\r\n\r\n`
       ),
       imageBuffer,
       Buffer.from(`\r\n--${boundary}--\r\n`)
     ]);
 
-    const resp = await fetchWithTimeout(fullUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': `multipart/form-data; boundary=${boundary}` },
-      body
-    }, 20000);
-
+    const resp = await fetchWithTimeout(
+      fullUrl,
+      { method: "POST", headers: { "Content-Type": `multipart/form-data; boundary=${boundary}` }, body },
+      ms
+    );
     const text = await resp.text();
-    if (!resp.ok) throw new Error(`${resp.status} ${resp.statusText}: ${text.slice(0,400)}`);
+    if (!resp.ok) throw new Error(`${resp.status} ${resp.statusText}: ${text.slice(0,200)}`);
     try { return JSON.parse(text); } catch { return text; }
-  }
+  };
 
-  try { await fetchWithTimeout(url, { method: "GET" }, 8000); } catch {}
-
- 
+  const base = (spaceUrl || "").replace(/\/+$/, "");
   try {
-    return await postMultipart(`${url}/predict`, "imagen");
-  } catch (e1) {
-
+    if (!base) throw new Error("SPACE_URL missing");
+    try { await fetchWithTimeout(base, { method: "GET" }, 2000); } catch {}
     try {
-      return await postMultipart(`${url}/predict`, "file");
-    } catch (e2) {
-      
-      try {
-        const base64 = imageBuffer.toString("base64");
-        const resp = await fetchWithTimeout(`${url}/api/predict`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: [`data:${mime};base64,${base64}`] })
-        }, 20000);
-
-        const text = await resp.text();
-        if (!resp.ok) throw new Error(`${resp.status} ${resp.statusText}: ${text.slice(0,400)}`);
-        try { return JSON.parse(text); } catch { return text; }
-      } catch (e3) {
-
-        const model = process.env.HF_MODEL_SLUG || "lightningpal/epiderm2";
-        const out = await hfImageClassify(model, imageBuffer);
-        return { model, predictions: out };
-      }
+      return await postMultipart(`${base}/predict`, "imagen", SPACE_TRY_MS);
+    } catch {
+      return await postMultipart(`${base}/predict`, "file", SPACE_TRY_MS);
     }
+  } catch (spaceErr) {
+    // Fallback: Hugging Face Inference API (has its own small retry)
+    const predictions = await hfImageClassify(model, imageBuffer, { maxRetries: 1, retryDelayMs: 1000 });
+    return { model, predictions };
   }
 }
+
 
 
 
@@ -525,33 +513,33 @@ app.post(ANALYZE_PATHS, authRequired, usageLimiter({ daily: 3, monthly: 90 }), u
 );
 
 
+// Replace your whole /hf-classify handler with this
 const HF_PATHS = ["/hf-classify", "/api/hf-classify"];
 app.post(HF_PATHS, upload.single("imagen"), async (req, res) => {
+  res.set("Content-Type", "application/json"); // force JSON even on errors
   try {
     if (!req.file) {
-      return res.status(400).json({ ok: false, error: "No se subió ninguna imagen." });
+      return res.status(400).json({ ok:false, error:"No se subió ninguna imagen." });
     }
 
-    const imageBuffer = req.file.buffer;  
+    const imageBuffer = req.file.buffer;
     const spaceUrl = process.env.SPACE_URL || "https://lightningpal-epiderm.hf.space";
-
     const out = await callSpacePredict(spaceUrl, imageBuffer);
 
-    const predictions = Array.isArray(out?.predictions)
-  ? out.predictions
-  : Array.isArray(out)
-  ? out
-  : [];
+    const predictions =
+      Array.isArray(out?.predictions) ? out.predictions :
+      Array.isArray(out) ? out : [];
 
-return res.json({
-  ok: true,
-  model: `${out?.model || process.env.HF_MODEL_SLUG || 'unknown'} (Space/HF)`,
-  predictions
-});
-
+    return res.status(200).json({
+      ok: true,
+      model: `${out?.model || process.env.HF_MODEL_SLUG || "unknown"} (Space/HF)`,
+      predictions
+    });
   } catch (err) {
-    console.error("Error en /hf-classify (Space proxy):", err);
-    return res.status(502).json({ ok: false, error: err?.message || "No se pudo clasificar la imagen." });
+    const msg = err?.message || "No se pudo clasificar la imagen.";
+    const status = /timeout|aborted|504/i.test(msg) ? 504 : 502;
+    console.error("Error en /hf-classify:", err);
+    return res.status(status).json({ ok:false, error: msg });
   }
 });
 
