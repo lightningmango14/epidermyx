@@ -21,7 +21,7 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
-
+app.set('trust proxy', 1);
 
 app.use((req, res, next) => {
   if (req.method === 'OPTIONS') {
@@ -33,6 +33,29 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// ---- CORS + no-store for all /api/* (MUST be before any /api routes) ----
+app.use(
+  "/api",
+  cors({
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true); // curl/postman
+      if (
+        origin === "https://epidermyx.com" ||
+        origin === "https://www.epidermyx.com"
+      ) return cb(null, true);
+      return cb(null, false);
+    },
+    credentials: true
+  }),
+  (req, res, next) => {
+    res.set("Cache-Control", "no-store, max-age=0");
+    res.set("CDN-Cache-Control", "no-store");
+    res.set("Vercel-CDN-Cache-Control", "no-store");
+    next();
+  }
+);
+
 
 
 app.use(cookieParser());
@@ -170,12 +193,14 @@ app.post(SESSION_LOGIN_PATHS, express.json(), async (req, res) => {
     const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
 
     res.cookie("__session", cookie, {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/",
-      maxAge: expiresIn
-    });
+  httpOnly: true,
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+  path: "/",
+  domain: ".epidermyx.com",  
+  maxAge: expiresIn
+});
+
 
     return res.json({ ok: true });
   } catch (err) {
@@ -193,11 +218,15 @@ app.post(SESSION_SIGNUP_PATHS, express.json(), verifyRecaptcha, async (req, res)
 
     const expiresIn = 5 * 24 * 60 * 60 * 1000;
     const cookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
-    res.cookie("__session", cookie, {
-      httpOnly: true, sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/", maxAge: expiresIn
-    });
+   res.cookie("__session", cookie, {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+  path: "/",
+  domain: ".epidermyx.com",  
+  maxAge: expiresIn
+});
+
     return res.json({ ok:true });
   } catch (err) {
     console.error("[/sessionSignup] ERROR:", err);
