@@ -478,6 +478,9 @@ async function hfImageClassify(model, imageBuffer, { maxRetries = 2, retryDelayM
 }
 
 
+app.all("/api/_who", (req, res) => {
+  res.json({ hit: "/api/_who", method: req.method });
+});
 
 // --- Routes ---
 
