@@ -471,46 +471,59 @@ app.all("/api/_who", (req, res) => {
 });
 
 // --- Routes ---
+// --- Prompt for EpiDerm-1 (exact text you gave) ---
+const EPIDERM1_PROMPT = `Eres un dermatólogo que responde de muy clara manera a sus pacientes de acuerdo a lo que solicitan. Genera un diagnóstico en base a tus propios conocimientos, lo más certero posible. Recuerda siempre terminar recomendando la atención de un dermatólogo. En caso de que o la imágen y el texto, o solo la imágen (en caso de no haber texto) o solo el texto (en caso de no haber imágen) tengan relación con la dermatología, responde. Si la imágen y el texto parecen no ser conslutas dermatológicas, no respondas, y al contrario, solicita que el usuario haga una consulta dermatológica, o que explicitice su consulta. Si el texto tiene una ligera relación con que identifiques la imágen, igual intenta responder, siempre y cuando la imágen se asimile a una patología de la piel. No digas que no eres capaz de diagnosticar, solo que tu diagnóstico no puede reemplazar al de un médico o recomienda visitar a un médico. Además, recuerda responder en html, o sea, si quieres responder en negrita, utiliza <strong>, si vas a hacer una lista con números, <li>, etc, menos etiquetas como <html>. Recuerda de que es posible que un diagnóstico no sea maligno, sino que la patología presente es benigna o inexistente. Dentro de lo posible, indica otro diagnóstico que se podría asimilar o confundir con el que ya diste. Resume tus respuestas y no ocupes un lenguaje tan técnico.`;
 
 // EpiDerm-1 
-const ANALYZE_PATHS = ["/analyze", "/api/analyze"]; 
-app.post(ANALYZE_PATHS, authRequired, usageLimiter({ daily: 3, monthly: 90 }), upload.single("imagen"), async (req, res) => {
+const ANALYZE_PATHS = ["/analyze", "/api/analyze"];
+
+app.post(
+  ANALYZE_PATHS,
+  authRequired,
+  usageLimiter({ daily: 3, monthly: 90 }),
+  upload.single("imagen"),
+  async (req, res) => {
     try {
-      if (!req.file) {
-        return res.status(400).json({ error: "No image uploaded." });
+      const userText = (req.body?.pregunta || "").trim();
+      const file = req.file || null;
+
+      if (!file && !userText) {
+        return res.status(400).json({ error: "Debes enviar una imagen o un texto (o ambos)." });
       }
 
-      const base64Image = req.file.buffer.toString("base64");
-      const mime = req.file.mimetype || "image/jpeg"; 
+      // Build multimodal content with your EXACT prompt first
+      const content = [{ type: "text", text: EPIDERM1_PROMPT }];
+
+      // If user added question text, include it after the instruction
+      if (userText) {
+        content.push({ type: "text", text: `Pregunta del paciente: ${userText}` });
+      }
+
+      // If user uploaded an image, include it
+      if (file) {
+        const base64Image = file.buffer.toString("base64");
+        const mime = file.mimetype || "image/jpeg";
+        content.push({
+          type: "image_url",
+          image_url: { url: `data:${mime};base64,${base64Image}` }
+        });
+      }
 
       const response = await openai.chat.completions.create({
         model: "gpt-4o",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text:
-                  "Eres un dermatólogo que responde de muy clara manera a sus pacientes de acuerdo a lo que solicitan. Genera un diagnóstico en base a tus propios conocimientos, lo más certero posible. Recuerda siempre terminar recomendando la atención de un dermatólogo. En caso de que o la imágen y el texto, o solo la imágen (en caso de no haber texto) o solo el texto (en caso de no haber imágen) tengan relación con la dermatología, responde. Si la imágen y el texto parecen no ser conslutas dermatológicas, no respondas, y al contrario, solicita que el usuario haga una consulta dermatológica, o que explicitice su consulta. Si el texto tiene una ligera relación con que identifiques la imágen, igual intenta responder, siempre y cuando la imágen se asimile a una patología de la piel. No digas que no eres capaz de diagnosticar, solo que tu diagnóstico no puede reemplazar al de un médico o recomienda visitar a un médico. Además, recuerda responder en html, o sea, si quieres responder en negrita, utiliza <strong>, si vas a hacer una lista con números, <li>, etc, menos etiquetas como <html>. Recuerda de que es posible que un diagnóstico no sea maligno, sino que la patología presente es benigna o inexistente. Dentro de lo posible, indica otro diagnóstico que se podría asimilar o confundir con el que ya diste. Resume tus respuestas y no ocupes un lenguaje tan técnico."
-              },
-              {
-                type: "image_url",
-                image_url: { url: `data:${mime};base64,${base64Image}` }
-              }
-            ]
-          }
-        ]
+        messages: [{ role: "user", content }]
       });
 
-      return res.json({ result: response.choices?.[0]?.message?.content ?? "" });
+      return res.json({
+        result: response.choices?.[0]?.message?.content ?? ""
+      });
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Error al procesar la imagen" });
+      console.error("[/api/analyze] ERROR:", err);
+      return res.status(500).json({ error: "Error al procesar la consulta" });
     }
-    
   }
 );
+
 
 
 // Replace your whole /hf-classify handler with this
