@@ -1,5 +1,11 @@
 {
-  "rewrites": [
-    { "source": "/(inicio|epiderm-1|epiderm-2|iniciar-sesion|guiadiagnostico|acerca|paginas-apoyo)", "destination": "/" }
-  ]
+  "version": 2,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
+  "functions": {
+    "api/index.js": { "memory": 1536, "maxDuration": 20 }
+  }
 }
