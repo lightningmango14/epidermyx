@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/(inicio|epiderm-1|epiderm-2|iniciar-sesion|guiadiagnostico|acerca|paginas-apoyo)", "destination": "/" }
+  ]
+}
