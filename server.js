@@ -414,7 +414,7 @@ app.use(cors({
 
 
 
-app.use(express.static(path.join(__dirname, "public")));
+
 
 app.get('/api/ping', (req, res) => res.json({ ok: true, where: 'server', path: req.path }));
 app.post('/api/ping', (req, res) => res.json({ ok: true, where: 'server', method: 'POST', path: req.path }));
@@ -600,7 +600,7 @@ app.use((err, req, res, _next) => {
 });
 
 
-
+app.use(express.static(path.join(__dirname, "public")));
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
