@@ -36,6 +36,15 @@ app.use((req, res, next) => {
 
 
 app.use(cookieParser());
+app.get('/api/firebase-sanity', (req,res) => {
+  try {
+    const admin = getAdmin();
+    const app = admin.app();
+    res.json({ ok:true, projectId: app.options?.credential?.projectId || 'n/a' });
+  } catch (e) {
+    res.status(500).json({ ok:false, error: String(e?.message || e) });
+  }
+});
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
@@ -275,15 +284,7 @@ app.get("/me/usage", authRequired, (req, res) => {
   });
 });
 
-app.get('/api/firebase-sanity', (req,res) => {
-  try {
-    const admin = getAdmin();
-    const app = admin.app();
-    res.json({ ok:true, projectId: app.options?.credential?.projectId || 'n/a' });
-  } catch (e) {
-    res.status(500).json({ ok:false, error: String(e?.message || e) });
-  }
-});
+
 
 
 async function callSpacePredict(spaceUrl, imageBuffer, { filename = "image.jpg", mime = "image/jpeg" } = {}) {
