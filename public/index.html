@@ -100,7 +100,7 @@
   <form id="ia-form" class="requires-login">
     <div class="dz" data-preview="#ia-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
       <p>Arrastra una imagen aquí o haz clic en el espacio para elegir</p>
-      <input id="ia-file" name="imagen" type="file" accept="image/*" requiredhidden>
+      <input id="ia-file" name="imagen" type="file" accept="image/*" required hidden>
     </div>
     <textarea name="pregunta" placeholder="¿Qué deseas saber?" required></textarea>
     <label class="checkboxlabel">
@@ -574,28 +574,28 @@ loginForm?.addEventListener("submit", async (e) => {
 
 // --- Class dictionary (EDITEDITEDITEDIT)
 const CLASS_INFO = {
-  0:  { name: "Acné", desc: "Obstrucción e inflamación del folículo pilosebáceo con comedones, pápulas o pústulas.", link: "http://localhost:2001/acne" },
-  1:  { name: "Cicatriz de acné", desc: "Cambios permanentes en la piel tras acné previo (atrófica, hipertrófica o queloide).", link: "http://localhost:2001/acne" },
-  2:  { name: "Alopecia", desc: "Cáncer cutáneo común de crecimiento lento; suele presentarse como pápula perlada.", link: "https://www.cancer.gov/espanol/tipos/piel" },
-  3:  { name: "Dermatitis Atópica", desc: "Lesión benigna, verrugosa, de aspecto \"pegado\" a la piel; frecuente con la edad.", link: "" },
-  4:  { name: "Carcinoma Basocelular", desc: "Lesión precancerosa por daño solar crónico; placa áspera o descamativa.", link: "" },
+  0:  { name: "Acné", desc: "Obstrucción e inflamación del folículo pilosebáceo con comedones, pápulas o pústulas.", link: "http://epidermyx.com/acne" },
+  1:  { name: "Cicatriz de acné", desc: "Cambios permanentes en la piel tras acné previo (atrófica, hipertrófica o queloide).", link: "http://epidermyx.com/acne" },
+  2:  { name: "Alopecia", desc: "Cáncer cutáneo común de crecimiento lento; suele presentarse como pápula perlada.", link: "https://epidermyx.com/alopeciaareata" },
+  3:  { name: "Dermatitis Atópica", desc: "Lesión benigna, verrugosa, de aspecto \"pegado\" a la piel; frecuente con la edad.", link: "https://epidermyx.com/dermatitisatopica" },
+  4:  { name: "Carcinoma Basocelular", desc: "Lesión precancerosa por daño solar crónico; placa áspera o descamativa.", link: "https://epidermyx.com/carcinomabasocelular" },
   5:  { name: "Lunar Benigno", desc: "Acúmulo benigno de melanocitos; la mayoría de los lunares no son peligrosos.", link: "https://www.cancer.org/es/cancer/cancer-de-piel/no-melanoma/causas-riesgos-prevencion/lunares.html" },
-  6:  { name: "Alergia de Dermatitis", desc: "Proliferación benigna de vasos; suele ser roja/violácea.", link: "" },
-  7:  { name: "Eczema", desc: "Cáncer cutáneo que puede crecer y diseminarse; a menudo placa/nódulo queratósico.", link: "https://www.cancer.org/es/cancer/cancer-de-piel/no-melanoma.html" },
-  8:  { name: "Erythema", desc: "Lesión queratósica no maligna (categoría genérica).", link: "" },
-  9:  { name: "Herpes", desc: "Mácula hiperpigmentada bien delimitada, asociada a exposición solar.", link: "" },
-  10: { name: "Panadizo Herpético", desc: "Enfermedad inflamatoria crónica con placas eritematoescamosas.", link: "https://www.who.int/es/news-room/fact-sheets/detail/psoriasis" },
-  11: { name: "Hidradenitis Suppurativa", desc: "Inflamación pruriginosa de la piel; frecuentemente curso crónico y recidivante.", link: "" },
-  12: { name: "Keratosis", desc: "Eritema facial persistente, pápulas/pústulas; empeora con disparadores.", link: "" },
-  13: { name: "Melanoma", desc: "Dermatofitosis superficial; placa anular descamativa con borde activo.", link: "" },
-  14: { name: "Piel Normal", desc: "Pérdida adquirida de melanocitos; máculas acrómicas bien delimitadas.", link: "" },
-  15: { name: "Dermatitis Perorial", desc: "Proliferación benigna de vasos (habitual en lactantes).", link: "" },
-  16: { name: "Psoriasis", desc: "Lesiones umbilicadas por poxvirus; autolimitadas.", link: "" },
-  17: { name: "Rosacea", desc: "Lesión hiperqueratósica por VPH; superficie rugosa.", link: "" },
-  18: { name: "Dermatitis Seborreica", desc: "Habones pruriginosos evanescentes por liberación de histamina.", link: "" },
-  19: { name: "Dermatitis Seborreicapor VIH", desc: "Infección bacteriana superficial con costras melicéricas.", link: "" },
-  20: { name: "Urticaria", desc: "No se observan hallazgos dermatológicos relevantes.", link: "" },
-  21: { name: "Vitiligo", desc: "Neoplasia maligna de melanocitos; cambio ABCDE amerita evaluación urgente.", link: "https://www.cancer.gov/espanol/tipos/piel/paciente/tratamiento-melanoma-pdq" }
+  6:  { name: "Alergia de Dermatitis", desc: "Proliferación benigna de vasos; suele ser roja/violácea.", link: "https://epidermyx.com/dermatitisalergia" },
+  7:  { name: "Eczema", desc: "Cáncer cutáneo que puede crecer y diseminarse; a menudo placa/nódulo queratósico.", link: "https://epidermyx.com/eczema" },
+  8:  { name: "Erythema", desc: "Lesión queratósica no maligna (categoría genérica).", link: "https://epidermyx.com/erithema" },
+  9:  { name: "Herpes", desc: "Mácula hiperpigmentada bien delimitada, asociada a exposición solar.", link: "https://epidermyx.com/herpes" },
+  10: { name: "Panadizo Herpético", desc: "Enfermedad inflamatoria crónica con placas eritematoescamosas.", link: "https://epidermyx.com/herpes" },
+  11: { name: "Hidradenitis Suppurativa", desc: "Inflamación pruriginosa de la piel; frecuentemente curso crónico y recidivante.", link: "https://epidermyx.com/hidradenitissuppurativa" },
+  12: { name: "Keratosis", desc: "Eritema facial persistente, pápulas/pústulas; empeora con disparadores.", link: "https://epidermyx.com/queratosisactinica" },
+  13: { name: "Melanoma", desc: "Cáncer de piel causado por exposición prolongada a rayos UV. Su tratamiento es urgente, ya que en muchos casos es mortal. Revise ABCDE", link: "epidermyx.com/melanoma" },
+  14: { name: "Piel Normal", desc: "Piel normal, sin patologías presentes", link: "" },
+  15: { name: "Dermatitis Perorial", desc: "Proliferación benigna de vasos (habitual en lactantes).", link: "https://epidermyx.com/dermatitisperiorial" },
+  16: { name: "Psoriasis", desc: "Lesiones umbilicadas por poxvirus; autolimitadas.", link: "https://epidermyx.com/psoriasis" },
+  17: { name: "Rosacea", desc: "Lesión hiperqueratósica por VPH; superficie rugosa.", link: "https://epidermyx.com/rosacea" },
+  18: { name: "Dermatitis Seborreica", desc: "Habones pruriginosos evanescentes por liberación de histamina.", link: "https://epidermyx.com/dermatitisseborreica" },
+  19: { name: "Dermatitis Seborreica por VIH", desc: "Infección bacteriana superficial con costras melicéricas.", link: "https://epidermyx.com/dermatitisseborreica" },
+  20: { name: "Urticaria", desc: "No se observan hallazgos dermatológicos relevantes.", link: "https://epidermyx.com/urticaria" },
+  21: { name: "Vitiligo", desc: "Neoplasia maligna de melanocitos; cambio ABCDE amerita evaluación urgente.", link: "https://epidermyx.com/vitiligo" }
 };
 
 
