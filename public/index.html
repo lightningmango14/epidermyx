@@ -100,9 +100,9 @@
   <form id="ia-form" class="requires-login">
     <div class="dz" data-preview="#ia-preview" role="button" tabindex="0" aria-label="Arrastra una imagen o haz clic para elegir">
       <p>Arrastra una imagen aquí o haz clic en el espacio para elegir</p>
-      <input id="ia-file" name="imagen" type="file" accept="image/*" required hidden>
+      <input id="ia-file" name="imagen" type="file" accept="image/*"  hidden>
     </div>
-    <textarea name="pregunta" placeholder="¿Qué deseas saber?" required></textarea>
+    <textarea name="pregunta" placeholder="¿Qué deseas saber?" ></textarea>
     <label class="checkboxlabel">
       <input type="checkbox" id="consent" required>
       Entiendo que esto es informativo y no reemplaza atención médica.
@@ -535,30 +535,46 @@ loginForm?.addEventListener("submit", async (e) => {
       navigateTo(path);
     });
 
-    document.getElementById("ia-form").addEventListener("submit", async (e) => {
+document.getElementById("ia-form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const formData = new FormData(e.target);
+
+  const file = document.getElementById("ia-file").files?.[0] || null;
+  const text = (e.target.querySelector('textarea[name="pregunta"]').value || "").trim();
 
   const respuestaEl = document.getElementById("respuesta");
   respuestaEl.innerHTML = "Cargando";
   respuestaEl.classList.add("loading-dots");
 
-  try {
-    const res = await fetch("/api/analyze", {
-      method: "POST",
-      body: formData,
-      credentials: "include" 
-    });
-
-    const data = await res.json();
+  // must have at least one input
+  if (!file && !text) {
     respuestaEl.classList.remove("loading-dots");
+    respuestaEl.innerHTML = "Por favor, escribe una pregunta o sube una imagen.";
+    return;
+  }
+
+  const fd = new FormData();
+  if (file) fd.append("imagen", file);
+  if (text) fd.append("pregunta", text);
+
+  try {
+    const res = await fetch("/api/analyze", { method: "POST", body: fd, credentials: "include" });
+    // handle non-JSON gracefully
+    const ct = res.headers.get("content-type") || "";
+    const raw = await res.text();
+    const data = ct.includes("application/json") ? JSON.parse(raw) : { error: raw };
+
+    respuestaEl.classList.remove("loading-dots");
+    if (!res.ok) {
+      respuestaEl.innerHTML = data?.error || `Error HTTP ${res.status}`;
+      return;
+    }
     respuestaEl.innerHTML = data.result || "No se pudo obtener una respuesta.";
   } catch (error) {
     respuestaEl.classList.remove("loading-dots");
     respuestaEl.innerHTML = "Ocurrió un error al procesar la solicitud.";
   }
 });
-   
+
 
   function checker(url){
       var result = confirm('Esta acción provocará una redirección a otra página. ¿Deseas continuar?');
