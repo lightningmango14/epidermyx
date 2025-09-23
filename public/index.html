@@ -578,6 +578,23 @@ loginForm?.addEventListener("submit", async (e) => {
       history.pushState(null, '', '/' + sectionId);
     }
 
+    const titles = {
+      inicio: "EpiDermyx – Tu salud, sin límites(beta)",
+      "epiderm-1": "EpiDerm-1 – Resuelve tus dudas| EpiDermyx",
+      "epiderm-2": "EpiDerm-2 – Diagnostica tu piel | EpiDermyx",
+      guiadiagnostico: "Guía de diagnóstico | EpiDermyx",
+    };
+    const descriptions = {
+      inicio: "EpiDermyx es un sitio de ayuda y globalización de una buena salud de piel.",
+      "epiderm-1": "Describe tu caso y/o sube una imagen para recibir orientación y apoyo con IA.",
+      "epiderm-2": "Clasifica imágenes de piel utilizando un entreno en base a otras IA (beta).",
+      guiadiagnostico: "Descripciones clave para el entendimiento de las patologías de la piel.",
+    };
+
+    document.title = titles[sectionId] || "EpiDermyx (beta)";
+    document.getElementById("meta-desc")?.setAttribute("content", descriptions[sectionId] || descriptions.inicio);
+    document.getElementById("canonical")?.setAttribute("href", location.href);
+
     window.addEventListener('load', () => {
       const path = location.pathname.replace('/', '') || 'inicio';
       navigateTo(path);
