@@ -557,28 +557,33 @@ loginForm?.addEventListener("submit", async (e) => {
         sec.classList.remove('active');
     });
 
-    const target = document.getElementById(sectionId);
-    if (target) {
-        target.style.display = 'block'; 
-        target.classList.add('active');
-    }
+   function navigateTo(sectionId) {
+  // fallback to path if no argument
+  if (!sectionId) sectionId = location.pathname.replace(/^\//, '') || 'inicio';
 
-    
-    if (sectionId === 'guiadiagnostico') {
-        document.getElementById('guiadiagnostico').style.display = 'flex';
-    }
+  // hide all
+  document.querySelectorAll('.section').forEach(sec => {
+    sec.style.display = 'none';
+    sec.classList.remove('active');
+  });
 
-    
-    const isInicio = sectionId === 'inicio';
-    document.querySelectorAll('.only-inicio').forEach(el => {
-        el.style.display = isInicio ? 'flex' : 'none';
-    });
+  // show target
+  const target = document.getElementById(sectionId) || document.getElementById('inicio');
+  target.style.display = (sectionId === 'guiadiagnostico') ? 'flex' : 'block';
+  target.classList.add('active');
+
+  // toggle only-inicio blocks
+  const isInicio = (sectionId === 'inicio');
+  document.querySelectorAll('.only-inicio').forEach(el => {
+    el.style.display = isInicio ? 'flex' : 'none';
+  });
+
+  document.getElementById('menu')?.classList.remove('open');
+  history.pushState(null, '', '/' + sectionId);
+}
+
       
-      document.getElementById('menu').classList.remove('open');
-
-      
-      history.pushState(null, '', '/' + sectionId);
-    }
+    
 
     const titles = {
       inicio: "EpiDermyx – Tu salud, sin límites(beta)",
