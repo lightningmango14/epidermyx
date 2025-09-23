@@ -630,7 +630,6 @@ document.getElementById("ia-form").addEventListener("submit", async (e) => {
 
   try {
     const res = await fetch("/api/analyze", { method: "POST", body: fd, credentials: "include" });
-    // handle non-JSON gracefully
     const ct = res.headers.get("content-type") || "";
     const raw = await res.text();
     const data = ct.includes("application/json") ? JSON.parse(raw) : { error: raw };
@@ -675,7 +674,7 @@ const CLASS_INFO = {
   10: { name: "Panadizo Herpético", desc: "Enfermedad inflamatoria crónica con placas eritematoescamosas.", link: "https://epidermyx.com/herpes" },
   11: { name: "Hidradenitis Suppurativa", desc: "Inflamación pruriginosa de la piel; frecuentemente curso crónico y recidivante.", link: "https://epidermyx.com/hidradenitissuppurativa" },
   12: { name: "Keratosis", desc: "Eritema facial persistente, pápulas/pústulas; empeora con disparadores.", link: "https://epidermyx.com/queratosisactinica" },
-  13: { name: "idk twin", desc: "" },
+  13: { name: "idk twin", desc: "Cáncer de piel causado por exposición prolongada a rayos UV. Su tratamiento es urgente, ya que en muchos casos es mortal. Revise ABCDE", link: "epidermyx.com/melanoma" },
   14: { name: "Piel Normal", desc: "Piel normal, sin patologías presentes", link: "" },
   15: { name: "Dermatitis Perorial", desc: "Proliferación benigna de vasos (habitual en lactantes).", link: "https://epidermyx.com/dermatitisperiorial" },
   16: { name: "Psoriasis", desc: "Lesiones umbilicadas por poxvirus; autolimitadas.", link: "https://epidermyx.com/psoriasis" },
