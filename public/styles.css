@@ -789,5 +789,9 @@ footer {
 }
 
 .acnesection h3{
-    padding: 1% 0.5%
+  padding-bottom: 0.5%;
 }
+
+.acnesection ul{
+  padding-left: 1%;
+} 
