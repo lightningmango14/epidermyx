@@ -809,3 +809,22 @@ footer {
   display: block;
   
 }
+
+
+creditlink:link {
+  color: #bfbfbf;
+}
+
+
+creditlink:visited {
+  color: #bfbfbf;
+}
+
+creditlink:hover {
+  color: #8a8a8a;
+}
+
+
+creditlink:active {
+  color: #bfbfbf;
+}
