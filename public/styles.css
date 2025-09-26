@@ -829,3 +829,7 @@ footer {
 .creditlink:active {
   color: #bfbfbf;
 }
+
+.content h1{
+  padding-top: 1%
+}
